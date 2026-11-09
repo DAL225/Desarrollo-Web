@@ -75,7 +75,7 @@ Describir brevemente la contribución de cada integrante.
 
 - **Diego:** Creación del repositorio en Github, y del webhook
 - **Misael:** Creación prototipo visual, carpetas base, definicion esquema.sql, definicion requerimientos
-- **Cesar:**
+- **Cesar:** Organización interna del equipo, registro y distribución de responsabilidades.  
 
 ---
 
