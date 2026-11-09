@@ -52,8 +52,8 @@ Existe el diseño inicial del proyecto
 Documentar el uso de herramientas de inteligencia artificial durante el desarrollo del proyecto.
 
 - **Herramienta utilizada:** Gemini Modelos de Gemini 3
-- **Actividad para la que se utilizó:** Definicion estructura de base de datos y clases en Java
-- **Código o contenido generado:** Analisis de entidades y correcciones clave
+- **Actividad para la que se utilizó:** Definicion estructura de base de datos y clases en Java, requerimientos y restricciones
+- **Código o contenido generado:** Analisis de entidades y correcciones clave, lista de requerimientos y restricciones
 - **Modificaciones realizadas por el equipo:** Primera version, no hubo modificaciones
 - **Forma en que se verificó el resultado:** Analizando clases e implementacion posterior en base de datos, buscando en web etiquetas de relacion entre clases(tablas)
 
@@ -61,7 +61,7 @@ Documentar el uso de herramientas de inteligencia artificial durante el desarrol
 
 - **Herramienta utilizada:** Claude, Sonnet 5.5
 - **Actividad para la que se utilizó:** Propuesta para interfaz de usuario.
-- **Código o contenido generado:** Creacion de prototipo visual en pdf y estatico.
+- **Código o contenido generado:** Creacion de prototipo visual estatico e interactivo.
 - **Modificaciones realizadas por el equipo:** Primera version, no hubo modificaciones
 - **Forma en que se verificó el resultado:** Analizando que se cumpliera con todos los requerimientos completamente
 
