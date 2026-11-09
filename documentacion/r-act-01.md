@@ -73,8 +73,8 @@ Documentar el uso de herramientas de inteligencia artificial durante el desarrol
 
 Describir brevemente la contribución de cada integrante.
 
-- **Diego:**
-- **Misael:** Creacion prototipo visual, carpetas base, definicion esquema.sql, definicion requerimientos
+- **Diego:** Creación del repositorio en Github, y del webhook
+- **Misael:** Creación prototipo visual, carpetas base, definicion esquema.sql, definicion requerimientos
 - **Cesar:**
 
 ---
