@@ -17,7 +17,6 @@ public class Medico {
 
     //@Id para indicar que el atributo corresponde con la llave primaria de la entidad
     @Id
-    @Column(name = "id_medico")
     private int idMedico;
 
     /**
@@ -62,7 +61,6 @@ public class Medico {
         if (direccion == null || direccion.trim().isEmpty() || direccion.length() > 100) {
             throw new IllegalArgumentException("La dirección es obligatoria y no puede superar los 100 caracteres.");
         }
-
         this.usuario = usuario;
         this.cedulaProfesional = cedulaProfesional;
         this.especialidad = especialidad;

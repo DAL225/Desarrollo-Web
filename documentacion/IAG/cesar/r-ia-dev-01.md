@@ -1,7 +1,7 @@
 # Reporte de IA Desarrollo en el Proyecto
 
-**Fecha:**  
-**Número de reporte:**  
+**Fecha:**11/11/2026  
+**Número de reporte:** 1
 
 ---
 
@@ -17,14 +17,31 @@ Describir la intención general del desarrollo.
 |------------|------------------------|
 Herramienta | GEMINI
 Modelo/temperatura | Gemini / 0.2
-Prompt original | Texto
-Respuesta de IA | Texto
+Prompt original | [prompt 1](#prompt_1)
+Respuesta de IA | [respuesta 1](#respuesta_1)
 Código anterior | 5663284
-Código posterior | 
-Diferencias entre versiones | git diff --numstat 48d2b5d 0897eez (copiar la salida)
+Código posterior | 7165789
+Diferencias entre versiones | 117     0       .mvn/wrapper MavenWrapperDownloader.java -       -       .mvn/wrapper/maven-wrapper.jar 2       0       .mvn/wrapper/maven-wrapper.properties 2       0       backend/.gitignore 5       0       backend/src/main/java/mx/uv/medlink/backend/IMedico.java 5       0       backend/src/main/java/mx/uv/medlink/backend IUsuario.java 119     0       backend/src/main/java/mx/uv/medlink/backend/Medico.java 38      0       backend/src/main/java/mx/uv/medlink/backend/MedicoControlador 129     0       backend/src/main/java/mx/uv/medlink/backend/Usuario.java 115     0       backend/src/main/java/mx/uv/medlink/backend/UsuarioControlador.java 117     0       documentacion/IAG/cesar/r-ia-dev-01.md 130     0       documentacion/IAG/cesar/r-ia-doc-01.md 310     0       mvnw :" Prueba de funcionamiento | CURL o captura imagen del resultado Código de uso | Diseño Reflexión del estudiante | 
 Prueba de funcionamiento | CURL o captura imagen del resultado
-Código de uso | Configuración / Diseño / Explicación
-Reflexión del estudiante | Texto breve que describe lo obtenido u ocurrido y lo aprendido por parte del estudiante
+Código de uso | Diseño
+Reflexión del estudiante | 
+
+
+# 2. Evidencias de uso
+
+| Evidencia | Formato | 
+|------------|------------------------|
+Herramienta | GEMINI
+Modelo/temperatura | Gemini / 0.2
+Prompt original | [prompt 2](#prompt_2)
+Respuesta de IA | [respuesta 2](#respuesta_2)
+Código anterior | 5663284
+Código posterior | 12240de
+Diferencias entre versiones | 117     0       .mvn/wrapper MavenWrapperDownloader.java -       -       .mvn/wrapper/maven-wrapper.jar 2       0       .mvn/wrapper/maven-wrapper.properties 2       0       backend/.gitignore 5       0       backend/src/main/java/mx/uv/medlink/backend/IMedico.java 5       0       backend/src/main/java/mx/uv/medlink/backend IUsuario.java 119     0       backend/src/main/java/mx/uv/medlink/backend/Medico.java 38      0       backend/src/main/java/mx/uv/medlink/backend/MedicoControlador 129     0       backend/src/main/java/mx/uv/medlink/backend/Usuario.java 115     0       backend/src/main/java/mx/uv/medlink/backend/UsuarioControlador.java 117     0       documentacion/IAG/cesar/r-ia-dev-01.md 130     0       documentacion/IAG/cesar/r-ia-doc-01.md 310     0       mvnw :" 
+Prueba de funcionamiento | CURL o captura imagen del resultado 
+Código de uso | Diseño 
+Reflexión del estudiante | 
+
 
 
 > El prompt y la respuesta pueden ser copiados como una subsección y enlazados
