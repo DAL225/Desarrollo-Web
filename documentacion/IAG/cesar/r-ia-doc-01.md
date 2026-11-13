@@ -15,9 +15,9 @@ Explicacion de construccion de clases en el Backend
 
 | Fecha | Herramienta | Enlace a prompt | Enlace a respuesta |
 |------------|------------------------|-----------------|-------|
-11/11/2026	 | Asistente IA (Gemini)  | [prompt_1](#prompt_1) | [Respuesta 1](#respuesta_1)
-| | | | |
-| | | | |
+11/11/2026	 | Asistente IA (Gemini)  | [prompt 1](#prompt_1) | [Respuesta 1](#respuesta_1)
+11/11/2026	 | Asistente IA (Gemini)  | [prompt 2](#prompt_2) | [Respuesta 2](#respuesta_2)
+11/11/2026	 | Asistente IA (Gemini)  | [prompt 3](#prompt_3) | [Respuesta 3](#respuesta_3)
 | | | | |
 | | | | |
 
