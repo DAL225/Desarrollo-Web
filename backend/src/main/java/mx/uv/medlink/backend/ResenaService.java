@@ -40,7 +40,7 @@ public class ResenaService {
                 .countByMedico_IdMedicoAndUsuario_IdUsuarioAndEstado(
                         idMedico,
                         idUsuario,
-                        EstadoCita.ATENDIDA
+                        Cita.estado.ATENDIDA
                 );
 
         // Obtener la cantidad de reseñas publicadas
