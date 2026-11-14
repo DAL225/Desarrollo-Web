@@ -22,9 +22,9 @@ Respuesta de IA | [respuesta 1](#respuesta_1)
 Código anterior | 5663284
 Código posterior | 7165789
 Diferencias entre versiones | 117     0       .mvn/wrapper MavenWrapperDownloader.java -       -       .mvn/wrapper/maven-wrapper.jar 2       0       .mvn/wrapper/maven-wrapper.properties 2       0       backend/.gitignore 5       0       backend/src/main/java/mx/uv/medlink/backend/IMedico.java 5       0       backend/src/main/java/mx/uv/medlink/backend IUsuario.java 119     0       backend/src/main/java/mx/uv/medlink/backend/Medico.java 38      0       backend/src/main/java/mx/uv/medlink/backend/MedicoControlador 129     0       backend/src/main/java/mx/uv/medlink/backend/Usuario.java 115     0       backend/src/main/java/mx/uv/medlink/backend/UsuarioControlador.java 117     0       documentacion/IAG/cesar/r-ia-dev-01.md 130     0       documentacion/IAG/cesar/r-ia-doc-01.md 310     0       mvnw :" Prueba de funcionamiento | CURL o captura imagen del resultado Código de uso | Diseño Reflexión del estudiante | 
-Prueba de funcionamiento | CURL o captura imagen del resultado
+Prueba de funcionamiento | No existieron pruebas dado que son dudas de diseño
 Código de uso | Diseño
-Reflexión del estudiante | 
+Reflexión del estudiante | Las restriciones de una tabla en PostgreSQL se definen en la clase de java
 
 
 # 2. Evidencias de uso
@@ -38,9 +38,9 @@ Respuesta de IA | [respuesta 2](#respuesta_2)
 Código anterior | 5663284
 Código posterior | 12240de
 Diferencias entre versiones | 117     0       .mvn/wrapper MavenWrapperDownloader.java -       -       .mvn/wrapper/maven-wrapper.jar 2       0       .mvn/wrapper/maven-wrapper.properties 2       0       backend/.gitignore 5       0       backend/src/main/java/mx/uv/medlink/backend/IMedico.java 5       0       backend/src/main/java/mx/uv/medlink/backend IUsuario.java 119     0       backend/src/main/java/mx/uv/medlink/backend/Medico.java 38      0       backend/src/main/java/mx/uv/medlink/backend/MedicoControlador 129     0       backend/src/main/java/mx/uv/medlink/backend/Usuario.java 115     0       backend/src/main/java/mx/uv/medlink/backend/UsuarioControlador.java 117     0       documentacion/IAG/cesar/r-ia-dev-01.md 130     0       documentacion/IAG/cesar/r-ia-doc-01.md 310     0       mvnw :" 
-Prueba de funcionamiento | CURL o captura imagen del resultado 
+Prueba de funcionamiento | No existieron pruebas dado que son dudas de diseño
 Código de uso | Diseño 
-Reflexión del estudiante | 
+Reflexión del estudiante | Las interfaces son muy simples pero es necesario utilizar en ocasiones declaraciones de metodos.
 
 
 
