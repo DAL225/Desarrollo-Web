@@ -23,7 +23,7 @@ Pruebas mediante CURL
 |------------|------------------------|-----------------|
 |Creacion de clases relacionadas a Resena| Misael | https://github.com/DAL225/Desarrollo-Web/commit/a9ac8e7b2752972e9f45a5e4fd4c13ac8c29166c|
 |Creacion de clases de Cita y Receta| Diego | https://github.com/DAL225/Desarrollo-Web/commit/23f09cdad7c33a9434974275b8a51aeeebdc355b|
-| | | |
+|Creacion de clases relacionadas a Usuario y Medico | Cesar | https://github.com/DAL225/Desarrollo-Web/commit/12d57aee019a7279a1266d9c16d2f5434b3a11f4|
 | | | |
 | | | |
 
@@ -67,9 +67,9 @@ Documentar el uso de herramientas de inteligencia artificial durante el desarrol
 
 Describir brevemente la contribución de cada integrante.
 
-- **Diego:** Creación de clases sobre Cita y Receta
-- **Misael:** Creación de clases sobre Resena, y respectivas pruebas.
-- **Cesar:** Organización interna del equipo, registro y distribución de responsabilidades.  
+- **Diego:** Diseño e implementación de las entidades Cita y receta en el backend
+- **Misael:** Creacion del proyecto Maven, Diseño e implementación de las entidades Reseña en el backend
+- **Cesar:** Diseño e implementación de las entidades Usuario y medico en el backend  
 
 ---
 
