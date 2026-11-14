@@ -22,7 +22,7 @@ Pruebas mediante CURL
 | Actividad | Integrante responsable | Enlace a commit |
 |------------|------------------------|-----------------|
 |Creacion de clases relacionadas a Resena| Misael | https://github.com/DAL225/Desarrollo-Web/commit/a9ac8e7b2752972e9f45a5e4fd4c13ac8c29166c|
-| | | |
+|Creacion de clases de Cita y Receta| Diego | https://github.com/DAL225/Desarrollo-Web/commit/23f09cdad7c33a9434974275b8a51aeeebdc355b|
 | | | |
 | | | |
 | | | |
