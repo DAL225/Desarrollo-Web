@@ -67,7 +67,7 @@ Documentar el uso de herramientas de inteligencia artificial durante el desarrol
 
 Describir brevemente la contribución de cada integrante.
 
-- **Diego:** Creación del repositorio en Github, y del webhook
+- **Diego:** Creación de clases sobre Cita y Receta
 - **Misael:** Creación de clases sobre Resena, y respectivas pruebas.
 - **Cesar:** Organización interna del equipo, registro y distribución de responsabilidades.  
 
