@@ -13,13 +13,13 @@ public class UsuarioService {
     private IUsuario iusuario;
 
     /**
-     * Agrega un usuario en la BD.
+     * Crea un usuario en la BD.
      * @param nombre nombre del usuario.
      * @param correo correo del usuario.
-     * @param nombre contrasena del usuario.
-     * @param correo telefono del usuario.
+     * @param contrasena contrasena del usuario.
+     * @param telefono telefono del usuario.
      * @param rol rol del usuario.
-     * @return true si tiene citas atendidas disponibles para reseñar.
+     * @return Objeto Usuario.
      */
     public Usuario crearUsuario(String nombre, String correo, String contrasena, String telefono, String rol) {
         // Se crea una instancia del usuario
@@ -31,10 +31,7 @@ public class UsuarioService {
     /**
      * Elimina un usuario en la BD.
      * @param idUsuario identificador del usuario.
-     * @param correo identificador del usuario.
-     * @param nombre identificador del médico.
-     * @param correo identificador del usuario.
-     * @return true si tiene citas atendidas disponibles para reseñar.
+     * @return true si el usuario pudo ser eliminado, en caso contrario false.
      */   
     public boolean eliminarUsuario(int idUsuario){
         if (iusuario.existsById(idUsuario)) {
@@ -44,6 +41,16 @@ public class UsuarioService {
         return false;
     }   
 
+    /**
+     * Modificar un usuario en la BD.
+     * @param id id del usuario.
+     * @param nombre nombre del usuario.
+     * @param correo correo del usuario.
+     * @param contrasena correo del usuario.
+     * @param telefono telefono del usuario.
+     * @param rol rol del usuario.
+     * @return Objeto Usuario modificado, o null en caso de que no se encuentre el mismo.
+     */
     public Usuario modificarUsuario(int id, String nombre, String correo, String contrasena, String telefono, String rol){
         // Verificamos si el usuario existe antes de actualizar
         if (iusuario.existsById(id)) {
@@ -54,6 +61,11 @@ public class UsuarioService {
         return null; // O puedes retornar una excepción si no se encuentra
     }
 
+
+    /**
+     * Metodo que obtiene todos los usuarios de la BD
+     * @return Lista de usuarios en la BD.
+     */
     public List<Usuario> obtenerUsuarios(){
         //Surge por el error de retornar directamente el arreglo
         Iterable<Usuario> iterable = iusuario.findAll();
@@ -61,6 +73,12 @@ public class UsuarioService {
         return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
     }
 
+
+    /**
+     * Metodo que devuelve un usuario en la BD mediante su id.
+     * @param id id del usuario.
+     * @return Objeto Usuario.
+     */
     public Usuario obtenerUsuarioPorId(int id) {
         return iusuario.findById(id).orElse(null);
     }

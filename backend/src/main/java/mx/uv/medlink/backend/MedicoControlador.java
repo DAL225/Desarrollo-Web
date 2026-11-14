@@ -15,8 +15,8 @@ public class MedicoControlador {
 
     /**
      * Consulta el listado completo de médicos registrados en el sistema.
-     * 
-     * @return el listado de médicos o un mensaje informativo en texto plano.
+     *
+     * @return el listado de médicos o un mensaje de error si no fue posible recuperarlos.
      */
     @GetMapping("/api/medicos")
     public Object obtenerMedicos() {
@@ -31,7 +31,7 @@ public class MedicoControlador {
     /**
      * Consulta un médico específico mediante su identificador numérico.
      * 
-     * @param id identificador único del médico en formato de texto para validación.
+     * @param id id del médico en formato de texto para validación.
      * @return el objeto médico encontrado o un mensaje de texto con el error correspondiente.
      */
     @GetMapping("/medico/{id}")
@@ -60,13 +60,13 @@ public class MedicoControlador {
     }
 
     /**
-     * Registra un nuevo perfil de médico vinculado a un usuario existente tras validar la integridad de los datos.
+     * Registra un nuevo médico relacionado a una tupla de usuario existente tras validar la integridad de los datos.
      * 
      * @param idUsuario identificador del usuario asociado al médico.
      * @param cedula cédula profesional del médico.
-     * @param especialidad área de especialización médica.
-     * @param direccion ubicación del consultorio o centro médico.
-     * @return un mensaje de texto indicando el resultado del registro.
+     * @param especialidad especialidad del medico.
+     * @param direccion ubicación del médico.
+     * @return un mensaje de confirmacion del proceso.
      */
     @PostMapping("/api/medicos/registro/{idUsuario}/{cedula}/{especialidad}/{direccion}")
     public Object agregarMedico(
@@ -123,9 +123,8 @@ public class MedicoControlador {
     }
 
     /**
-     * Elimina un médico del sistema basándose en su identificador único.
-     * 
-     * @param id identificador único del médico en formato de texto.
+     * Elimina un médico del sistema mediante su id.
+     * @param id id del médico en formato de texto.
      * @return un mensaje de texto confirmando la eliminación o reportando el fallo.
      */
     @DeleteMapping("/api/medicos/registro/{id}")
@@ -156,9 +155,9 @@ public class MedicoControlador {
     /**
      * Actualiza la información de un médico existente tras validar su existencia y la integridad de los campos.
      * 
-     * @param id identificador único del médico.
-     * @param idUsuario identificador del usuario asociado.
-     * @param cedula nueva cédula profesional.
+     * @param id id del médico.
+     * @param idUsuario id del usuario asociado.
+     * @param cedula nueva cédula.
      * @param especialidad nueva especialidad.
      * @param direccion nueva dirección.
      * @return un mensaje de texto con el resultado de la actualización.

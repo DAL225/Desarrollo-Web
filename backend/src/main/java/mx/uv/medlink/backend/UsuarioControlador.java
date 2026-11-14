@@ -19,12 +19,9 @@ public class UsuarioControlador {
     private UsuarioService usuarioService;
     private IUsuario iusuario;
     
-    // Inyección de dependencias para conectar con la BD
-    // Metodo para agregar un usuario a la BD ingresando sus parametros en el curl
-    // Ejemplo de uso: POST /usuario/Juan Pérez/juan@mail.com/12345/2281234567/paciente
-/**
+    /**
      * Consulta el listado completo de usuarios registrados en el sistema.
-     * 
+     * Ejemplo de uso: POST /usuario/Juan Pérez/juan@mail.com/12345/2281234567/paciente
      * @return el listado de usuarios o un mensaje informativo en texto plano.
      */
     @GetMapping("/api/usuarios")
@@ -70,22 +67,23 @@ public class UsuarioControlador {
             return "Error interno en el servidor";
         }
     }
+
     @Autowired
     private IMedico imedico;
 
-    // Metodo para agregar un usuario a la BD ingresando sus parametros en el curl y , si es médico, se crea su perfil profesional automáticamente
-   /**
-     * Registra un nuevo usuario con rol médico o paciente tras validar la integridad de los datos.
+    /**
+     * Metodo para agregar un usuario a la BD ingresando sus parametros en el curl 
+     * y , si es médico, se crea su perfil profesional automáticamente
      * 
-     * @param nombre nombre completo del usuario.
-     * @param correo correo electrónico institucional o personal.
-     * @param contrasena clave de acceso al sistema.
-     * @param telefono número telefónico de contacto.
-     * @param rol rol asignado en la plataforma.
+     * @param nombre nombre del usuario.
+     * @param correo correo del usuario.
+     * @param contrasena contraseña del usaurio.
+     * @param telefono número del usuario.
+     * @param rol rol del usuario (paciente o medico).
      * @param cedula cédula profesional para perfiles médicos.
      * @param especialidad área de especialización médica.
      * @param direccion ubicación del consultorio o centro médico.
-     * @return un mensaje de texto indicando el resultado del registro.
+     * @return Mensaje de texto afirmativo o negativo
      */
     @PostMapping("/api/usuarios/registro/medico/{nombre}/{correo}/{contrasena}/{telefono}/{rol}/{cedula}/{especialidad}/{direccion}")
     public Object crearUsuario(
@@ -195,13 +193,13 @@ public class UsuarioControlador {
         }
     }
 
-/**
+    /**
      * Actualiza la información de un usuario existente tras validar su existencia y la integridad de los campos.
      * 
-     * @param id identificador único del usuario.
+     * @param id id del usuario.
      * @param nombre nuevo nombre del usuario.
      * @param correo nuevo correo electrónico.
-     * @param contrasena nueva contraseña de acceso.
+     * @param contrasena nueva contraseña del usuario.
      * @param telefono nuevo número telefónico.
      * @param rol nuevo rol asignado.
      * @return un mensaje de texto con el resultado de la actualización.
