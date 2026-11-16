@@ -3,6 +3,7 @@ package mx.uv.medlink.backend;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -52,11 +53,12 @@ public class ResenaControlador {
      * Guardar una nueva reseña.
      */
     @PostMapping("/api/resenas")
-    public Map<String, Object> guardarResena(@RequestBody Resena resena) {
+    public Map<String, Object> guardarResena(
+            @Valid @RequestBody ResenaDTO dto) {
 
         try {
 
-            Resena resenaGuardada = resenaService.guardarResena(resena);
+            Resena resenaGuardada = resenaService.guardarResena(dto);
 
             return respuesta(
                     true,
@@ -65,11 +67,42 @@ public class ResenaControlador {
 
         } catch (Exception e) {
 
-            System.out.println("Error al guardar la resena: " + e.getMessage());
+            System.out.println(
+                    "Error al guardar la resena: " + e.getMessage());
 
             return respuesta(
                     false,
-                    "Error al guardar la resena",
+                    e.getMessage(),
+                    null);
+        }
+    }
+
+    
+    /**
+     * Actualizar el comentario de una reseña.
+     */
+    @PutMapping("/api/resenas/{idResena}")
+    public Map<String, Object> actualizarResena(
+            @PathVariable("idResena") Integer idResena,
+            @Valid @RequestBody ActualizarResenaDTO dto) {
+
+        try {
+
+            Resena resenaActualizada = resenaService.actualizarResena(idResena, dto);
+
+            return respuesta(
+                    true,
+                    "Reseña actualizada correctamente",
+                    resenaActualizada);
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "Error al actualizar la reseña: " + e.getMessage());
+
+            return respuesta(
+                    false,
+                    e.getMessage(),
                     null);
         }
     }
