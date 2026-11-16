@@ -40,6 +40,22 @@ public class Resena {
             String comentario,
             LocalDate fecha) {
 
+        if (medico == null) {
+            throw new IllegalArgumentException("La reseña debe estar asociada obligatoriamente a un médico.");
+        }
+
+        if (usuario == null) {
+            throw new IllegalArgumentException("La reseña debe estar asociada obligatoriamente a un usuario.");
+        }
+
+        if (calificacion == null || calificacion < 1 || calificacion > 10) {
+            throw new IllegalArgumentException("La calificación debe estar entre 1 y 10.");
+        }
+
+        if (fecha == null || fecha.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("La fecha de la reseña debe ser válida.");
+        }
+
         this.medico = medico;
         this.usuario = usuario;
         this.calificacion = calificacion;
