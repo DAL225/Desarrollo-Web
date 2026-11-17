@@ -1,0 +1,24 @@
+/* Panel del paciente */
+.fila-filtros{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:.8rem 0}
+
+/* Directorio de medicos */
+.med-cabecera{display:flex;gap:.8rem;align-items:center}
+.avatar{width:46px;height:46px;border-radius:50%;background:var(--claro);color:var(--oscuro);display:grid;place-items:center;font-weight:700;flex:none}
+.nota{background:var(--claro);color:var(--oscuro);font-weight:700;border-radius:8px;padding:.1rem .5rem}
+
+/* Horarios y resenas dentro de modal-medico */
+.fila-resena{border-bottom:1px solid var(--borde);padding:.6rem 0}
+.fila-resena:last-child{border:0}
+
+/* Receta (modal-receta) */
+.hoja-receta{border:2px solid var(--primario);border-radius:6px;padding:1.2rem;background:#fff}
+.hoja-receta h3{color:var(--oscuro);border-bottom:2px solid var(--primario);padding-bottom:.4rem;margin-bottom:.6rem}
+.firma{text-align:right;margin-top:2rem;font-size:.85rem}
+
+/* Al imprimir / guardar como PDF solo se muestra la receta */
+@media print{
+  body *{visibility:hidden}
+  .hoja-receta,.hoja-receta *{visibility:visible}
+  .hoja-receta{position:absolute;left:0;top:0;width:100%}
+}
+@media(max-width:560px){.fila-filtros{grid-template-columns:1fr}}

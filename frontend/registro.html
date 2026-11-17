@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MediCita - Registro</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/registro.css">
+</head>
+
+<body>
+  <main class="caja-auth tarjeta">
+    <h1>Crear cuenta</h1>
+    <p class="texto-suave">Elige cómo usarás la plataforma.</p>
+
+    <form id="form-registro">
+      <label for="rol">Tipo de cuenta</label>
+      <select id="rol">
+        <option value="PACIENTE">Soy paciente</option>
+        <option value="MEDICO">Soy médico</option>
+      </select>
+
+      <div class="fila-dos">
+        <div><label for="nombre">Nombre</label><input id="nombre" required></div>
+      </div>
+
+      <label for="correo">Correo electrónico</label>
+      <input type="email" id="correo" required>
+      <label for="clave">Contraseña</label>
+      <input type="password" id="clave" required>
+
+      <div id="campos-medico" class="oculto">
+        <label for="cedula">Cédula profesional</label>
+        <input id="cedula">
+        <label for="especialidad">Especialidad</label>
+        <select id="especialidad" name="especialidad">
+          <option value="">Selecciona una especialidad</option>
+          <option value="Cardiología">Cardiología</option>
+          <option value="Dermatología">Dermatología</option>
+          <option value="Ginecología">Ginecología</option>
+          <option value="Neurología">Neurología</option>
+          <option value="Pediatría">Pediatría</option>
+          <option value="Psiquiatría">Psiquiatría</option>
+          <option value="Traumatología">Traumatología</option>
+          <option value="Medicina general">Medicina general</option>
+        </select>
+        <label for="direccion">Dirección del consultorio</label>
+        <input id="direccion">
+      </div>
+
+      <p class="error oculto" id="error-registro"></p>
+      <button type="submit" class="boton ancho">Registrarme</button>
+    </form>
+
+    <p class="centro texto-suave">¿Ya tienes cuenta? <a href="index.html">Inicia sesión</a></p>
+  </main>
+  <div id="mensaje"></div>
+
+  <script src="js/comun.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+
+</html>

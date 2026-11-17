@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MediCita - Panel del paciente</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/paciente.css">
+</head>
+<body>
+  <header class="encabezado">
+    <span class="marca">✚ MedLink</span>
+    <nav class="menu">
+      <button class="activo" data-seccion="seccion-directorio">Directorio</button>
+      <button data-seccion="seccion-citas">Mis citas</button>
+      <button data-seccion="seccion-recetas">Recetas</button>
+    </nav>
+    <span class="usuario" id="nombre-usuario"></span>
+    <button class="boton secundario chico" id="btn-salir">Salir</button>
+  </header>
+
+  <main class="contenido">
+    <section class="seccion activo" id="seccion-directorio">
+      <h1>Directorio médico</h1>
+      <p class="texto-suave">Encuentra al especialista adecuado y reserva tu cita.</p>
+      <div class="fila-filtros">
+        <input id="buscar" placeholder="Buscar por nombre o especialidad">
+        <select id="filtro-especialidad"><option value="">Todas las especialidades</option></select>
+      </div>
+      <div class="cuadricula" id="lista-medicos"></div>
+    </section>
+
+    <section class="seccion" id="seccion-citas">
+      <h1>Mis citas</h1>
+      <p class="texto-suave" id="info-limite"></p>
+      <div class="cuadricula" id="lista-citas"></div>
+    </section>
+
+    <section class="seccion" id="seccion-recetas">
+      <h1>Mis recetas</h1>
+      <p class="texto-suave">Historial de recetas emitidas.</p>
+      <div class="cuadricula" id="lista-recetas"></div>
+    </section>
+  </main>
+
+  <!-- Modal: detalle del medico (horarios y resenas) -->
+  <div class="modal" id="modal-medico">
+    <div class="modal-caja">
+      <h2 id="medico-nombre"></h2>
+      <p class="texto-suave" id="medico-datos"></p>
+      <p class="texto-suave" id="medico-direccion"></p>
+
+      <h3 class="subtitulo">Horarios disponibles</h3>
+      <div id="lista-horarios"></div>
+
+      <h3 class="subtitulo">Reseñas</h3>
+      <div class="fila-dos">
+        <div>
+          <label for="orden-resenas">Ordenar por</label>
+          <select id="orden-resenas">
+            <option value="mayor">Mejor calificación</option>
+            <option value="menor">Menor calificación</option>
+            <option value="reciente">Más recientes</option>
+          </select>
+        </div>
+        <div>
+          <label for="rango-resenas">Calificación</label>
+          <select id="rango-resenas">
+            <option value="todas">Todas</option>
+            <option value="alta">9 – 10</option>
+            <option value="media">7 – 8</option>
+            <option value="baja">1 – 6</option>
+          </select>
+        </div>
+      </div>
+      <div id="lista-resenas"></div>
+      <div class="acciones"><button class="boton secundario" data-cerrar>Cerrar</button></div>
+    </div>
+  </div>
+
+  <!-- Modal: ver receta -->
+  <div class="modal" id="modal-receta">
+    <div class="modal-caja">
+      <div class="hoja-receta">
+        <h3>Receta médica</h3>
+        <p><b id="receta-medico"></b><br><span class="texto-suave" id="receta-especialidad"></span></p>
+        <p class="texto-suave">Paciente: <span id="receta-paciente"></span> · Fecha: <span id="receta-fecha"></span></p>
+        <p><b>Diagnóstico</b><br><span id="receta-diagnostico"></span></p>
+        <p><b>Tratamiento</b><br><span id="receta-tratamiento"></span></p>
+        <p><b>Indicaciones</b><br><span id="receta-indicaciones"></span></p>
+        <p class="firma">______________________<br>Firma del médico</p>
+      </div>
+      <div class="acciones">
+        <button class="boton" id="btn-pdf">⬇ Descargar PDF</button>
+        <button class="boton secundario" data-cerrar>Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: dejar resena -->
+  <div class="modal" id="modal-resena">
+    <div class="modal-caja">
+      <h2>Calificar atención</h2>
+      <p class="texto-suave" id="resena-info"></p>
+      <form id="form-resena">
+        <label for="calificacion">Calificación: <b class="nota" id="valor-calificacion">8</b> / 10</label>
+        <input type="range" id="calificacion" min="1" max="10" value="8">
+        <label for="comentario">Comentario</label>
+        <textarea id="comentario" rows="4" placeholder="Cuéntanos tu experiencia" required></textarea>
+        <div class="acciones">
+          <button type="submit" class="boton">Enviar reseña</button>
+          <button type="button" class="boton secundario" data-cerrar>Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Plantillas de tarjetas (se clonan desde JS) -->
+  <template id="plantilla-medico">
+    <article class="tarjeta">
+      <div class="med-cabecera">
+        <div class="avatar med-inicial"></div>
+        <div><h3 class="med-nombre"></h3><p class="texto-suave med-datos"></p></div>
+      </div>
+      <p class="texto-suave med-direccion"></p>
+      <div class="fila-pie">
+        <span class="nota med-promedio"></span>
+        <button class="boton chico btn-ver">Ver horarios</button>
+      </div>
+    </article>
+  </template>
+
+  <template id="plantilla-horario">
+    <div class="fila-resena fila-pie sin-margen">
+      <div><b class="hor-fecha"></b><p class="texto-suave hor-hora"></p></div>
+      <button class="boton chico btn-reservar">Reservar</button>
+    </div>
+  </template>
+
+  <template id="plantilla-resena">
+    <div class="fila-resena">
+      <span class="nota res-nota"></span> <span class="texto-suave res-fecha"></span>
+      <p class="res-texto"></p>
+    </div>
+  </template>
+
+  <template id="plantilla-cita">
+    <article class="tarjeta">
+      <div class="fila-pie sin-margen">
+        <h3 class="cita-medico"></h3>
+        <span class="estado cita-estado"></span>
+      </div>
+      <p class="texto-suave cita-fecha"></p>
+      <div class="acciones">
+        <button class="boton secundario chico btn-cancelar">Cancelar</button>
+        <button class="boton secundario chico btn-receta">Ver receta</button>
+        <button class="boton chico btn-resena">Dejar reseña</button>
+      </div>
+    </article>
+  </template>
+
+  <template id="plantilla-receta">
+    <article class="tarjeta">
+      <h3 class="rec-medico"></h3>
+      <p class="texto-suave rec-fecha"></p>
+      <p class="rec-diagnostico"></p>
+      <div class="acciones"><button class="boton chico btn-ver-receta">Ver detalle / PDF</button></div>
+    </article>
+  </template>
+
+  <div id="mensaje"></div>
+  <script src="js/comun.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/paciente.js"></script>
+</body>
+</html>
