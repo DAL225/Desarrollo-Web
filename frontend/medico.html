@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MediCita - Panel del médico</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/medico.css">
+</head>
+<body>
+  <header class="encabezado">
+    <span class="marca">✚ MedLink</span>
+    <nav class="menu">
+      <button class="activo" data-seccion="seccion-agenda">Agenda</button>
+      <button data-seccion="seccion-recetas">Recetas</button>
+    </nav>
+    <span class="usuario" id="nombre-usuario"></span>
+    <button class="boton secundario chico" id="btn-salir">Salir</button>
+  </header>
+
+  <main class="contenido">
+    <section class="seccion activo" id="seccion-agenda">
+      <div class="fila-pie sin-margen">
+        <div><h1>Mi agenda</h1><p class="texto-suave">Publica horarios para que los pacientes puedan reservar.</p></div>
+        <button class="boton" data-abrir="modal-cita">+ Nueva cita</button>
+      </div>
+      <div class="contadores">
+        <div class="contador"><b id="cont-disponibles">0</b>disponibles</div>
+        <div class="contador"><b id="cont-reservadas">0</b>reservadas</div>
+        <div class="contador"><b id="cont-atendidas">0</b>atendidas</div>
+        <div class="contador"><b id="cont-promedio">-</b>calificación</div>
+      </div>
+      <div class="cuadricula" id="lista-agenda"></div>
+    </section>
+
+    <section class="seccion" id="seccion-recetas">
+      <h1>Recetas emitidas</h1>
+      <p class="texto-suave">Solo se emiten recetas para citas atendidas.</p>
+      <div class="cuadricula" id="lista-recetas"></div>
+    </section>
+  </main>
+
+  <!-- Modal: nueva cita -->
+  <div class="modal" id="modal-cita">
+    <div class="modal-caja">
+      <h2>Nueva cita</h2>
+      <form id="form-cita">
+        <div class="fila-tres">
+          <div><label for="fecha">Fecha</label><input type="date" id="fecha" required></div>
+          <div><label for="inicio">Hora inicio</label><input type="time" id="inicio" value="09:00" required></div>
+          <div><label for="fin">Hora fin</label><input type="time" id="fin" value="09:30" required></div>
+        </div>
+        <p class="error oculto" id="error-cita"></p>
+        <div class="acciones">
+          <button type="submit" class="boton">Publicar cita</button>
+          <button type="button" class="boton secundario" data-cerrar>Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: emitir receta -->
+  <div class="modal" id="modal-receta">
+    <div class="modal-caja">
+      <h2>Emitir receta</h2>
+      <p class="texto-suave" id="receta-info"></p>
+      <form id="form-receta">
+        <label for="diagnostico">Diagnóstico</label>
+        <textarea id="diagnostico" rows="2" required></textarea>
+        <label for="tratamiento">Tratamiento / medicamentos</label>
+        <textarea id="tratamiento" rows="3" required></textarea>
+        <label for="indicaciones">Indicaciones</label>
+        <textarea id="indicaciones" rows="2"></textarea>
+        <div class="acciones">
+          <button type="submit" class="boton">Guardar receta</button>
+          <button type="button" class="boton secundario" data-cerrar>Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Plantillas de tarjetas -->
+  <template id="plantilla-agenda">
+    <article class="tarjeta">
+      <div class="fila-pie sin-margen">
+        <h3 class="ag-fecha"></h3>
+        <span class="estado ag-estado"></span>
+      </div>
+      <p class="texto-suave ag-hora"></p>
+      <p class="texto-suave ag-paciente"></p>
+      <div class="acciones">
+        <button class="boton chico btn-atender">Marcar atendida</button>
+        <button class="boton secundario chico btn-cancelar">Cancelar</button>
+        <button class="boton chico btn-receta">Emitir receta</button>
+      </div>
+    </article>
+  </template>
+
+  <template id="plantilla-receta-emitida">
+    <article class="tarjeta">
+      <h3 class="rec-paciente"></h3>
+      <p class="texto-suave rec-fecha"></p>
+      <p class="rec-diagnostico"></p>
+    </article>
+  </template>
+
+  <div id="mensaje"></div>
+  <script src="js/comun.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/medico.js"></script>
+</body>
+</html>

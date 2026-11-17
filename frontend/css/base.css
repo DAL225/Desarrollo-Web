@@ -1,0 +1,65 @@
+/* ===== Estilos compartidos por todas las paginas ===== */
+
+/* Variables, reset y tipografia */
+:root{--fondo:#f3f6f5;--tarjeta:#fff;--texto:#2b3a3a;--suave:#6b7f7e;--borde:#dbe5e3;--primario:#4f8a8b;--oscuro:#3d7172;--claro:#e4efee;--verde:#5d9b7a;--azul:#6b8cae;--rojo:#c1665f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fondo);color:var(--texto);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+h1{font-size:1.5rem;margin:0 0 .3rem}
+h2{font-size:1.2rem;margin:0 0 .5rem}
+h3{font-size:1rem;margin:0}
+p{margin:.3rem 0}
+a{color:var(--oscuro)}
+
+/* Utilidades */
+.texto-suave{color:var(--suave);font-size:.9rem}
+.centro{text-align:center}
+.oculto{display:none!important}
+.subtitulo{margin-top:1rem}
+.sin-margen{margin:0}
+
+/* Tarjetas y estados de cita */
+.tarjeta{background:var(--tarjeta);border:1px solid var(--borde);border-radius:14px;padding:1.1rem}
+.estado{display:inline-block;padding:.1rem .6rem;border-radius:20px;font-size:.75rem;font-weight:600;color:#fff}
+.estado.DISPONIBLE{background:var(--verde)}
+.estado.RESERVADA{background:var(--azul)}
+.estado.ATENDIDA{background:var(--primario)}
+.estado.CANCELADA{background:var(--rojo)}
+
+/* Formularios y botones */
+label{display:block;font-size:.85rem;color:var(--suave);margin:.7rem 0 .2rem}
+input,select,textarea{width:100%;padding:.55rem .7rem;border:1px solid var(--borde);border-radius:9px;background:var(--fondo);color:var(--texto);font:inherit}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--primario);border-color:transparent}
+.error{color:var(--rojo);font-size:.85rem;margin-top:.5rem}
+.fila-dos{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:.8rem 0}
+.boton{background:var(--primario);color:#fff;border:0;padding:.55rem 1.1rem;border-radius:9px;cursor:pointer;font:inherit;font-weight:500}
+.boton:hover{background:var(--oscuro)}
+.boton.secundario{background:none;color:var(--oscuro);border:1px solid var(--borde)}
+.boton.secundario:hover{background:var(--claro)}
+.boton.chico{padding:.3rem .7rem;font-size:.85rem}
+.boton.ancho{width:100%;margin-top:1rem}
+
+/* Estructura de los paneles (paciente y medico) */
+.encabezado{background:var(--tarjeta);border-bottom:1px solid var(--borde);padding:.7rem 1rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
+.marca{font-weight:700;color:var(--oscuro);font-size:1.15rem}
+.usuario{font-size:.9rem;color:var(--suave)}
+.menu{display:flex;gap:.3rem;margin-left:auto}
+.menu button{background:none;border:0;color:var(--suave);padding:.45rem .8rem;border-radius:8px;cursor:pointer;font:inherit}
+.menu button.activo,.menu button:hover{background:var(--claro);color:var(--oscuro)}
+.contenido{max-width:980px;margin:0 auto;padding:1.2rem 1rem 3rem}
+.seccion{display:none}
+.seccion.activo{display:block}
+.cuadricula{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1rem;margin-top:1rem}
+.fila-pie{display:flex;justify-content:space-between;align-items:center;gap:.5rem;margin-top:.8rem;flex-wrap:wrap}
+.fila-pie.sin-margen{margin:0}
+.acciones{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.8rem}
+
+/* Modales */
+.modal{display:none;position:fixed;inset:0;background:rgba(30,45,44,.45);place-items:center;padding:1rem;z-index:10}
+.modal.activo{display:grid}
+.modal-caja{background:var(--tarjeta);border-radius:14px;padding:1.2rem;width:100%;max-width:520px;max-height:90vh;overflow:auto}
+
+/* Aviso emergente */
+#mensaje{position:fixed;bottom:1.2rem;left:50%;transform:translateX(-50%);background:var(--texto);color:#fff;padding:.6rem 1.1rem;border-radius:10px;opacity:0;transition:.3s;pointer-events:none;z-index:30}
+#mensaje.activo{opacity:1}
+
+@media(max-width:560px){.fila-dos{grid-template-columns:1fr}}

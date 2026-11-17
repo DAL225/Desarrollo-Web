@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MediCita - Iniciar sesión</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+  <main class="caja-auth tarjeta">
+    <h1>Bienvenido de nuevo</h1>
+    <p class="texto-suave">Inicia sesión para acceder a tu panel.</p>
+
+    <form id="form-login">
+      <label for="correo">Correo electrónico</label>
+      <input type="email" id="correo" placeholder="nombre@correo.com" required>
+      <label for="clave">Contraseña</label>
+      <input type="password" id="clave" required>
+      <p class="error oculto" id="error-login"></p>
+      <button type="submit" class="boton ancho">Iniciar sesión</button>
+    </form>
+
+    <p class="centro texto-suave">¿No tienes cuenta? <a href="registro.html">Regístrate</a></p>
+    <p class="centro texto-suave">Demo: paciente@correo.com / medico@correo.com (clave 1234)</p>
+  </main>
+  <div id="mensaje"></div>
+
+  <script src="js/comun.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>
