@@ -1,7 +1,13 @@
 package mx.uv.medlink.backend;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -36,17 +42,20 @@ public class MedicoControlador {
      */
     @GetMapping("/medico/{id}")
     public Object obtenerMedicoPorId(@PathVariable String id) {
+        //Se verficia que el id enviado por el usuario no tenga valor null y que tenga texto
         if (id == null) {
             return "El parámetro no puede ser nulo";
         }
         if (id.length() == 0) {
             return "El parámetro no puede estar vacío";
         }
-
+        
         try {
+        //Se parsea el valor a entero
             int idInt = Integer.parseInt(id);
+        //Se busca al medico por su id y si existe se recupera su objeto
             Medico medicoEncontrado = medicoService.obtenerMedicoPorId(idInt);
-
+        //Si se pudo recuperar el objeto medico se envia al usuario si no entonces un mensaje de confirmacion
             if (medicoEncontrado != null) {
                 return medicoEncontrado;
             } else {
@@ -74,7 +83,7 @@ public class MedicoControlador {
             @PathVariable String cedula,
             @PathVariable String especialidad,
             @PathVariable String direccion) {
-
+    // Se valida que cada uno de los satos enviados por el usuario tengan valor no nulo y texto existente
         if (idUsuario == null) {
             return "El identificador de usuario no puede ser nulo";
         }
@@ -99,17 +108,19 @@ public class MedicoControlador {
         if (direccion.length() == 0) {
             return "La dirección no puede estar vacía";
         }
-
+    
         try {
+        //Se parsea el id del usuario a entero
             int idUsuarioInt = Integer.parseInt(idUsuario);
+        //Buscamos al usuario existente en la BD y lo recuperamos
             Usuario usuarioAsociado = usuarioService.obtenerUsuarioPorId(idUsuarioInt);
-
+        //En caso de que el usuario no se pudiera recuperar
             if (usuarioAsociado == null) {
                 return "El usuario asociado no existe en la base de datos";
             }
-
+        //Se agrega el nuevo medico a la BD y se recupera el objeto
             Medico nuevoMedico = medicoService.agregarMedico(usuarioAsociado, cedula, especialidad, direccion);
-
+        //Si se recupero el objeto medico entonces se envia un mensaje de confirmacion
             if (nuevoMedico != null) {
                 return "Médico agregado correctamente";
             } else {
@@ -129,6 +140,7 @@ public class MedicoControlador {
      */
     @DeleteMapping("/api/medicos/registro/{id}")
     public Object eliminarMedico(@PathVariable String id) {
+        //Se verifica que el id enviado por el usuario no tenga valor nulo o texto vacio
         try {
             if (id == null) {
                 return "El identificador no puede ser nulo";
@@ -136,10 +148,11 @@ public class MedicoControlador {
             if (id.length() == 0) {
                 return "El identificador no puede estar vacío";
             }
-
+        //Se parsea el id del usuario a entero
             int idInt = Integer.parseInt(id);
+        //Se elimina al usuario y se regresa true o false dependiendo si se pudo eliminar o no al usuario
             boolean eliminado = medicoService.eliminarMedico(idInt);
-
+        //Si el borrado fue exitoso se enviara un mensaje confirmando los cambios
             if (eliminado) {
                 return "Médico eliminado exitosamente";
             } else {
@@ -169,8 +182,8 @@ public class MedicoControlador {
             @PathVariable String cedula,
             @PathVariable String especialidad,
             @PathVariable String direccion) {
-
         try {
+        //Se verifica que los datos enviados por el usuario no tengan valor nulo o texto vacio
             if (id == null) {
                 return "El identificador no puede ser nulo";
             }
@@ -201,8 +214,9 @@ public class MedicoControlador {
             if (direccion.length() == 0) {
                 return "La dirección no puede estar vacía";
             }
-
+        //Se parsea el id a entero
             int idInt = Integer.parseInt(id);
+        //Se 
             int idUsuarioInt = Integer.parseInt(idUsuario);
 
             Usuario usuarioAsociado = usuarioService.obtenerUsuarioPorId(idUsuarioInt);

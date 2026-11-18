@@ -1,5 +1,7 @@
 package mx.uv.medlink.backend;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -8,8 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -27,10 +27,13 @@ public class UsuarioControlador {
     @GetMapping("/api/usuarios")
     public Object verUsuarios() {
         try {
+            //Obtiene una lista de usuarios en el sistema
             List<Usuario> usuarios = usuarioService.obtenerUsuarios();
+            //Verifica que la lista no este vacia, si esta vacia envia un mensaje al usuario
             if (usuarios.isEmpty()) {
                 return "No hay usuarios registrados en el sistema";
             }
+            //Envia la lista de usuarios
             return usuarios;
         } catch (Exception e) {
             e.printStackTrace();
@@ -46,19 +49,26 @@ public class UsuarioControlador {
      */
     @GetMapping("/usuario/{id}")
     public Object verUsuario(@PathVariable String id) {
-        if (id == null) {
-            return "El parámetro no puede ser nulo";
-        }
-        if (id.length() == 0) {
-            return "El parámetro no puede estar vacío";
-        }
-
         try {
+            //Se verifica que id enviado por el usuario no tenga valor nulo.
+            if (id == null) {
+                return "El parámetro no puede ser nulo";
+            }
+
+            //Se verifica que el id enviado no sea una linea de caracteres vacia.
+            if (id.length() == 0) {
+                return "El parámetro no puede estar vacío";
+            }
+
+            //Se convierte el id de texto a entero.
             int idInt = Integer.parseInt(id);
+            //Obtenemos el objeto del usuario encontrado y verificamos que no este vacio
             Usuario usuarioEncontrado = usuarioService.obtenerUsuarioPorId(idInt);
             if (usuarioEncontrado != null) {
+                //Si se recupero el objeto se envia al usuario
                 return usuarioEncontrado;
             } else {
+                //Se notifica al usaurio que no fue encontrado
                 return "El usuario no fue encontrado";
             }
         } catch (NumberFormatException e) {
@@ -77,7 +87,7 @@ public class UsuarioControlador {
      * 
      * @param nombre nombre del usuario.
      * @param correo correo del usuario.
-     * @param contrasena contraseña del usaurio.
+     * @param contrasena contraseña del usuario.
      * @param telefono número del usuario.
      * @param rol rol del usuario (paciente o medico).
      * @param cedula cédula profesional para perfiles médicos.
@@ -96,6 +106,7 @@ public class UsuarioControlador {
             @PathVariable String especialidad,
             @PathVariable String direccion) {
 
+        //Para cada dato enviado se verifica que no tenga el valor null y que exista texto alguno.
         if (nombre == null) {
             return "El nombre no puede ser nulo";
         }
@@ -144,15 +155,18 @@ public class UsuarioControlador {
         if (direccion.length() == 0) {
             return "La dirección no puede estar vacía";
         }
-
+        
         try {
+            //  Se crea al nuevo usuario
             Usuario nuevoUsuario = usuarioService.crearUsuario(nombre, correo, contrasena, telefono, rol);
-
+            //  Si se regresa el nuevo dato que se ingreso entonces, verificamos si el rol insertado es un medico.
             if (nuevoUsuario != null) {
+                //Si el rol es el de medico, entonces se crea el nuevo objeto y se llama a la interfaz
                 if (rol.equalsIgnoreCase("medico")) {
                     Medico nuevoMedico = new Medico(nuevoUsuario, cedula, especialidad, direccion);
                     imedico.save(nuevoMedico);
                 }
+                //Entonces se confirma la creacion del usuario
                 return "usuario agregado correctamente";
             } else {
                 return "No se pudo registrar el usuario";
@@ -171,6 +185,7 @@ public class UsuarioControlador {
     @DeleteMapping("/api/usuarios/registro/{id}")
     public Object eliminarUsuario(@PathVariable String id) {
         try {
+            //Se verifica que el id enviado tenga valor y texto no vacio
             if (id == null) {
                 return "El identificador no puede ser nulo";
             }
@@ -178,9 +193,11 @@ public class UsuarioControlador {
                 return "El identificador no puede estar vacío";
             }
 
+            //Se parsea el id a entero
             int idInt = Integer.parseInt(id);
+            //Se elimina el usuario de la BD
             boolean eliminado = usuarioService.eliminarUsuario(idInt);
-
+            //Si se regresa true o false se envia el mensaje de confirmacion correspondiente
             if (eliminado) {
                 return "Usuario eliminado exitosamente";
             } else {
@@ -214,6 +231,7 @@ public class UsuarioControlador {
             @PathVariable String rol) {
 
         try {
+            //Se valida que cada uno de los datos recuperados no tenga el valor nulo y texto vacio en caso de error se regresa el mensaje correspondiente
             if (id == null) {
                 return "El identificador no puede ser nulo";
             }
@@ -250,10 +268,12 @@ public class UsuarioControlador {
             if (rol.length() == 0) {
                 return "El rol no puede estar vacío";
             }
-
+        
+        //Se parsea el id a entero
             int idInt = Integer.parseInt(id);
+        //Se modifica al usuario en la BD
             Usuario usuarioActualizado = usuarioService.modificarUsuario(idInt, nombre, correo, contrasena, telefono, rol);
-
+        //Si se regresa el objeto modificado de la BD entonces se regresa un mensaje de confirmacion
             if (usuarioActualizado != null) {
                 return "Usuario actualizado correctamente";
             } else {
