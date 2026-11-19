@@ -95,16 +95,13 @@ public class UsuarioControlador {
      * @param direccion ubicación del consultorio o centro médico.
      * @return Mensaje de texto afirmativo o negativo
      */
-    @PostMapping("/api/usuarios/registro/medico/{nombre}/{correo}/{contrasena}/{telefono}/{rol}/{cedula}/{especialidad}/{direccion}")
+    @PostMapping("/api/usuarios/registro/medico/{nombre}/{correo}/{contrasena}/{telefono}/{rol}")
     public Object crearUsuario(
             @PathVariable String nombre,
             @PathVariable String correo,
             @PathVariable String contrasena,
             @PathVariable String telefono,
-            @PathVariable String rol,
-            @PathVariable String cedula,
-            @PathVariable String especialidad,
-            @PathVariable String direccion) {
+            @PathVariable String rol) {
 
         //Para cada dato enviado se verifica que no tenga el valor null y que exista texto alguno.
         if (nombre == null) {
@@ -137,36 +134,12 @@ public class UsuarioControlador {
         if (rol.length() == 0) {
             return "El rol no puede estar vacío";
         }
-        if (cedula == null) {
-            return "La cédula no puede ser nula";
-        }
-        if (cedula.length() == 0) {
-            return "La cédula no puede estar vacía";
-        }
-        if (especialidad == null) {
-            return "La especialidad no puede ser nula";
-        }
-        if (especialidad.length() == 0) {
-            return "La especialidad no puede estar vacía";
-        }
-        if (direccion == null) {
-            return "La dirección no puede ser nula";
-        }
-        if (direccion.length() == 0) {
-            return "La dirección no puede estar vacía";
-        }
         
         try {
             //  Se crea al nuevo usuario
             Usuario nuevoUsuario = usuarioService.crearUsuario(nombre, correo, contrasena, telefono, rol);
             //  Si se regresa el nuevo dato que se ingreso entonces, verificamos si el rol insertado es un medico.
             if (nuevoUsuario != null) {
-                //Si el rol es el de medico, entonces se crea el nuevo objeto y se llama a la interfaz
-                if (rol.equalsIgnoreCase("medico")) {
-                    Medico nuevoMedico = new Medico(nuevoUsuario, cedula, especialidad, direccion);
-                    imedico.save(nuevoMedico);
-                }
-                //Entonces se confirma la creacion del usuario
                 return "usuario agregado correctamente";
             } else {
                 return "No se pudo registrar el usuario";

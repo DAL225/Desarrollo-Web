@@ -68,6 +68,106 @@ public class MedicoControlador {
         }
     }
 
+
+/**
+     * Metodo para agregar un usuario a la BD ingresando sus parametros en el curl 
+     * y , si es médico, se crea su perfil profesional automáticamente
+     * 
+     * @param nombre nombre del usuario.
+     * @param correo correo del usuario.
+     * @param contrasena contraseña del usuario.
+     * @param telefono número del usuario.
+     * @param rol rol del usuario (paciente o medico).
+     * @param cedula cédula profesional para perfiles médicos.
+     * @param especialidad área de especialización médica.
+     * @param direccion ubicación del consultorio o centro médico.
+     * @return Mensaje de texto afirmativo o negativo
+     */
+    @PostMapping("/api/usuarios/registro/medico/{nombre}/{correo}/{contrasena}/{telefono}/{rol}/{cedula}/{especialidad}/{direccion}")
+    public Object crearUsuarioMedico(
+            @PathVariable String nombre,
+            @PathVariable String correo,
+            @PathVariable String contrasena,
+            @PathVariable String telefono,
+            @PathVariable String rol,
+            @PathVariable String cedula,
+            @PathVariable String especialidad,
+            @PathVariable String direccion) {
+
+        //Para cada dato enviado se verifica que no tenga el valor null y que exista texto alguno.
+        if (nombre == null) {
+            return "El nombre no puede ser nulo";
+        }
+        if (nombre.length() == 0) {
+            return "El nombre no puede estar vacío";
+        }
+        if (correo == null) {
+            return "El correo no puede ser nulo";
+        }
+        if (correo.length() == 0) {
+            return "El correo no puede estar vacío";
+        }
+        if (contrasena == null) {
+            return "La contraseña no puede ser nula";
+        }
+        if (contrasena.length() == 0) {
+            return "La contraseña no puede estar vacía";
+        }
+        if (telefono == null) {
+            return "El teléfono no puede ser nulo";
+        }
+        if (telefono.length() == 0) {
+            return "El teléfono no puede estar vacío";
+        }
+        if (rol == null) {
+            return "El rol no puede ser nulo";
+        }
+        if (rol.length() == 0) {
+            return "El rol no puede estar vacío";
+        }
+        if (cedula == null) {
+            return "La cédula no puede ser nula";
+        }
+        if (cedula.length() == 0) {
+            return "La cédula no puede estar vacía";
+        }
+        if (especialidad == null) {
+            return "La especialidad no puede ser nula";
+        }
+        if (especialidad.length() == 0) {
+            return "La especialidad no puede estar vacía";
+        }
+        if (direccion == null) {
+            return "La dirección no puede ser nula";
+        }
+        if (direccion.length() == 0) {
+            return "La dirección no puede estar vacía";
+        }
+        
+        try {
+            //  Se crea al nuevo usuario
+            Usuario nuevoUsuario = usuarioService.crearUsuario(nombre, correo, contrasena, telefono, rol);
+            //  Si se regresa el nuevo dato que se ingreso entonces, verificamos si el rol insertado es un medico.
+            if (nuevoUsuario != null) {
+                //Si el rol es el de medico, entonces se crea el nuevo objeto y se llama a la interfaz
+                if (rol.equalsIgnoreCase("medico")) {
+                    Medico nuevoMedico = medicoService.agregarMedico(nuevoUsuario, cedula, especialidad, direccion);
+                    if (nuevoMedico != null){
+                        return "Nuevo medico agregado correctamente";
+                    }else{
+                        return "Error al agregar al medico";
+                    }
+                }else{
+                    return "No se puede registrar otro rol";
+                }
+            } else {
+                return "No se pudo registrar al usuario";
+            }
+        } catch (Exception e) {
+            return "Error interno al procesar el registro";
+        }
+    }
+
     /**
      * Registra un nuevo médico relacionado a una tupla de usuario existente tras validar la integridad de los datos.
      * 
@@ -175,10 +275,9 @@ public class MedicoControlador {
      * @param direccion nueva dirección.
      * @return un mensaje de texto con el resultado de la actualización.
      */
-    @PutMapping("/api/medicos/registro/{id}/{idUsuario}/{cedula}/{especialidad}/{direccion}")
+    @PutMapping("/api/medicos/registro/{id}/{cedula}/{especialidad}/{direccion}")
     public Object actualizarMedico(
             @PathVariable String id,
-            @PathVariable String idUsuario,
             @PathVariable String cedula,
             @PathVariable String especialidad,
             @PathVariable String direccion) {
@@ -189,12 +288,6 @@ public class MedicoControlador {
             }
             if (id.length() == 0) {
                 return "El identificador no puede estar vacío";
-            }
-            if (idUsuario == null) {
-                return "El identificador de usuario no puede ser nulo";
-            }
-            if (idUsuario.length() == 0) {
-                return "El identificador de usuario no puede estar vacío";
             }
             if (cedula == null) {
                 return "La cédula no puede ser nula";
@@ -216,10 +309,7 @@ public class MedicoControlador {
             }
         //Se parsea el id a entero
             int idInt = Integer.parseInt(id);
-        //Se 
-            int idUsuarioInt = Integer.parseInt(idUsuario);
-
-            Usuario usuarioAsociado = usuarioService.obtenerUsuarioPorId(idUsuarioInt);
+            Usuario usuarioAsociado = usuarioService.obtenerUsuarioPorId(idInt);
             if (usuarioAsociado == null) {
                 return "El usuario asociado no existe en la base de datos";
             }
