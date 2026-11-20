@@ -1,6 +1,6 @@
 package mx.uv.medlink.backend;
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 
 @Service
@@ -69,9 +69,10 @@ public class MedicoService {
     public Medico modificarMedico(int idMedico, Usuario usuario, String cedula, String especialidad, String direccion){
         // Verificamos si el usuario existe antes de actualizar
         if (imedico.existsById(idMedico)) {
+            //Se crea un nuevo objeto medico que se sustituye por el anterior
             Medico medicoActualizado = new Medico(usuario, cedula, especialidad, direccion);
             return imedico.save(medicoActualizado);
         }
-        return null; // O puedes retornar una excepción si no se encuentra
+        return null;
     }
 }
