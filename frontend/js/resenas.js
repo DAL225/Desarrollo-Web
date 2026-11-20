@@ -1,18 +1,85 @@
 let citaActualResena = null;
 
-function obtenerResenas() {
-  return leer('resenas', [
-    { idCita: 5, idMedico: 'medico@correo.com', idPaciente: 'paciente2@correo.com', calificacion: 9, comentario: 'Puntual y muy profesional.', fecha: fechaMas(-13) }
-  ]);
+
+async function obtenerResenas(idMedico) {
+  try {
+    const respuesta = await fetch(`http://localhost:8081/api/resenas/medico/${idMedico}`);
+
+    if (!respuesta.ok) {
+      alert(respuesta.message);
+    }
+
+    const resultado = await respuesta.json();
+
+    const resenas = resultado.data || [];
+
+    console.log(resenas);
+    return resenas;
+
+  } catch (error) {
+    console.error('Error al cargar las reseñas:', error);
+    return [];
+  }
 }
 
-function calcularPromedioMedico(correo) {
-  const r = obtenerResenas().filter(x => x.idMedico === correo);
+/**
+ * Actualizacion de la resena
+ */
+document.getElementById('form-editar-resena').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const id = Number(document.getElementById('id-resena').value);
+  let comentario = document.getElementById('editar-comentario').value.trim();
+
+  const comentarioOriginal = comentarioGlobal.trim();
+
+  if (!comentario) {
+    alert('No puede quedar vacío el comentario');
+    return;
+  }
+
+  if (comentario === comentarioOriginal) {
+    alert('No realizaste ningún cambio en el comentario');
+    return;
+  }
+
+  if (!comentario.startsWith('(editado) ')) {
+    comentario = '(editado) ' + comentario;
+  }
+
+  try {
+    console.log("resena a actualizar: " + id)
+    const respuesta = await fetch(`http://localhost:8081/api/resenas/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ comentario })
+    });
+
+    const resultado = await respuesta.json();
+
+    // Validar si ocurrió algún error
+    if (!respuesta.ok || !resultado.success) {
+      alert(resultado.message || 'No se pudo actualizar la reseña');
+      return;
+    }
+
+    alert(resultado.message || 'Reseña actualizada correctamente');
+
+  } catch (error) {
+    console.error('Error al actualizar:', error);
+    alert('No fue posible actualizar la reseña, intente más tarde');
+  }
+});
+
+function calcularPromedioMedico(id) {
+  const r = obtenerResenas(id);
   if (!r.length) return 'Nuevo';
-  return '★ ' + (r.reduce((s, x) => s + x.calificacion, 0) / r.length).toFixed(1);
+  return (r.reduce((s, x) => s + x.calificacion, 0) / r.length).toFixed(1);
 }
 
-function cargarResenasModal() {
+function cargarResenasModal(listaResenas) {
   const cont = document.getElementById('lista-resenas');
   if (!cont) return;
 
@@ -20,10 +87,10 @@ function cargarResenasModal() {
   const rango = document.getElementById('rango-resenas')?.value || 'todas';
   cont.innerHTML = '';
 
-  let lista = obtenerResenas().filter(r => r.idMedico === medicoActual).filter(r =>
-    rango === 'todas' || 
-    (rango === 'alta' && r.calificacion >= 9) || 
-    (rango === 'media' && r.calificacion >= 7 && r.calificacion <= 8) || 
+  let lista = listaResenas.filter(r =>
+    rango === 'todas' ||
+    (rango === 'alta' && r.calificacion >= 9) ||
+    (rango === 'media' && r.calificacion >= 7 && r.calificacion <= 8) ||
     (rango === 'baja' && r.calificacion <= 6)
   );
 
@@ -41,6 +108,15 @@ function cargarResenasModal() {
     poner(t, '.res-nota', r.calificacion + '/10');
     poner(t, '.res-fecha', r.fecha);
     poner(t, '.res-texto', r.comentario);
+
+    const btnEditar = t.querySelector('.btn-editar-resena');
+
+    if (r.usuario.idUsuario === 102) { // CAMBIAR POR SESSION
+      btnEditar.style.display = 'inline-block';
+
+      btnEditar.onclick = () => editarResena(r);
+    }
+
     cont.appendChild(t);
   });
 }

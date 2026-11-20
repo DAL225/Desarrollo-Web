@@ -51,3 +51,20 @@ if (formRegistro) {
     setTimeout(() => location.href = 'index.html', 900);
   });
 }
+
+//Carga el contenido del template del backend
+document.getElementById("btn-contacto").addEventListener("click", async () => {
+  const contenedor = document.getElementById("seccion-contacto");
+
+  if (!contenedor.dataset.cargado) {
+    const respuesta = await fetch("http://localhost:8081/api/contacto");
+    
+    const html = await respuesta.text();
+    console.log(html);
+    contenedor.innerHTML = html;
+    contenedor.dataset.cargado = "true";
+  }
+
+  mostrarSeccion("seccion-contacto");
+
+});

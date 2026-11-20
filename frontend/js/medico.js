@@ -10,7 +10,7 @@ function cargarAgenda() {
   const recetas = obtenerRecetas();
   const mias = obtenerCitas().filter(c => c.idMedico === usuario.correo)
     .sort((a, b) => (b.fecha + b.inicio).localeCompare(a.fecha + a.inicio));
-  
+
   cont.innerHTML = '';
   if (!mias.length) {
     cont.innerHTML = '<p class="texto-suave">Aún no has publicado citas.</p>';
@@ -21,7 +21,7 @@ function cargarAgenda() {
     poner(t, '.ag-fecha', c.fecha);
     poner(t, '.ag-hora', c.inicio + ' – ' + c.fin);
     poner(t, '.ag-paciente', c.idPaciente ? 'Paciente: ' + nombreUsuario(c.idPaciente) : 'Sin paciente');
-    
+
     const est = t.querySelector('.ag-estado');
     est.textContent = c.estado;
     est.classList.add(c.estado);
@@ -53,9 +53,33 @@ function cargarContadores(mias) {
   document.getElementById('cont-disponibles').textContent = cuenta('DISPONIBLE');
   document.getElementById('cont-reservadas').textContent = cuenta('RESERVADA');
   document.getElementById('cont-atendidas').textContent = cuenta('ATENDIDA');
-  
+
   const r = obtenerResenas().filter(x => x.idMedico === usuario.correo);
   document.getElementById('cont-promedio').textContent = r.length ? (r.reduce((s, x) => s + x.calificacion, 0) / r.length).toFixed(1) : '-';
+}
+
+async function mostrarResenas() {
+  const idMedico = 52;// CAMBIAR A SESSION
+
+  // if (!medicoSesion || !medicoSesion.id) {
+  //     alert('No se pudo identificar al médico');
+  //     return;
+  // }
+
+  console.log("id buscado: " + idMedico)
+  const resenasMedico = await obtenerResenas(Number(idMedico));
+
+
+  const promedio = resenasMedico.length
+    ? resenasMedico.reduce((suma, r) => suma + Number(r.calificacion), 0) / resenasMedico.length
+    : 0;
+
+  document.getElementById('promedio-resenas').textContent = promedio.toFixed(1);
+
+  cargarResenasModal(resenasMedico);
+  console.log("en verresena");
+  console.log(idMedico);
+
 }
 
 // Inicialización del panel de médico

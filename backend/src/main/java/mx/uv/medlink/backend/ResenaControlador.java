@@ -60,6 +60,13 @@ public class ResenaControlador {
 
             Resena resenaGuardada = resenaService.guardarResena(dto);
 
+            if (resenaGuardada == null) {
+                return respuesta(
+                        false,
+                        "No se pudo actualizar la reseña",
+                        null);
+            }
+
             return respuesta(
                     true,
                     "Resena guardada correctamente",
@@ -77,7 +84,6 @@ public class ResenaControlador {
         }
     }
 
-    
     /**
      * Actualizar el comentario de una reseña.
      */
@@ -89,6 +95,13 @@ public class ResenaControlador {
         try {
 
             Resena resenaActualizada = resenaService.actualizarResena(idResena, dto);
+
+            if (resenaActualizada == null) {
+                return respuesta(
+                        false,
+                        "No se pudo actualizar la reseña",
+                        null);
+            }
 
             return respuesta(
                     true,

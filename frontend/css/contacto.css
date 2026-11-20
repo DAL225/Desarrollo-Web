@@ -1,0 +1,27 @@
+.tarjeta-contacto {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #0d6efd; /* Acento visual limpio */
+  border-radius: 10px;
+  padding: 24px;
+  max-width: 520px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  font-family: "DM Sans", Arial, sans-serif;
+}
+
+.tarjeta-contacto h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.25rem;
+  color: #0f172a;
+}
+
+.tarjeta-contacto p {
+  margin: 8px 0;
+  color: #334155;
+  line-height: 1.5;
+}
+
+.tarjeta-contacto strong {
+  color: #0f172a;
+}

@@ -24,9 +24,9 @@ function cargarMedicos() {
   const esp = document.getElementById('filtro-especialidad').value;
   cont.innerHTML = '';
 
-  const lista = obtenerUsuarios().filter(u => 
-    u.rol === 'MEDICO' && 
-    (!esp || u.especialidad === esp) && 
+  const lista = obtenerUsuarios().filter(u =>
+    u.rol === 'MEDICO' &&
+    (!esp || u.especialidad === esp) &&
     (u.nombre + u.especialidad).toLowerCase().includes(texto)
   );
 
@@ -41,8 +41,9 @@ function cargarMedicos() {
     poner(t, '.med-nombre', m.nombre);
     poner(t, '.med-datos', m.especialidad + ' · Céd. ' + m.cedula);
     poner(t, '.med-direccion', '📍 ' + m.direccion);
-    poner(t, '.med-promedio', calcularPromedioMedico(m.correo));
-    t.querySelector('.btn-ver').onclick = () => abrirMedico(m.correo);
+    //Se les agrega los eventos a cada elemento html
+    t.querySelector('.btn-ver-resena').onclick = () => verResenas(52); ///CAMBIAR POR ID
+    t.querySelector('.btn-ver-horario').onclick = () => abrirMedico(m.correo);
     cont.appendChild(t);
   });
 }
@@ -58,7 +59,6 @@ function abrirMedico(correo) {
   document.getElementById('medico-datos').textContent = m.especialidad + ' · Céd. ' + m.cedula;
   document.getElementById('medico-direccion').textContent = '📍 ' + m.direccion;
   cargarHorarios();
-  cargarResenasModal();
   abrirModal('modal-medico');
 }
 
@@ -115,7 +115,7 @@ function cargarCitas() {
     const bResena = t.querySelector('.btn-resena');
     const recetas = obtenerRecetas();
     const recetaAsociada = recetas.find(r => r.idCita === c.id);
-    const resenaAsociada = obtenerResenas().find(r => r.idCita === c.id);
+    const resenaAsociada = null
 
     if (c.estado === 'RESERVADA') {
       bCancelar.onclick = () => cancelarCitaPaciente(c.id);
@@ -138,6 +138,39 @@ function cargarCitas() {
     cont.appendChild(t);
   });
 }
+
+
+async function verResenas(idMedico) {
+
+  const resenasMedico = await obtenerResenas(Number(idMedico));
+
+  abrirModal("modal-lista-resenas");
+
+  const promedio = resenasMedico.length
+    ? resenasMedico.reduce((suma, r) => suma + Number(r.calificacion), 0) / resenasMedico.length
+    : 0;
+
+  document.getElementById('promedio-resenas').textContent = promedio.toFixed(1);
+
+  cargarResenasModal(resenasMedico);
+  console.log("en verresena");
+  console.log(idMedico);
+
+}
+
+let comentarioGlobal = "";
+
+function editarResena(resena) {
+    document.getElementById('id-resena').value = resena.id_resena;
+    document.getElementById('editar-comentario').value = resena.comentario;
+
+    comentarioGlobal = resena.comentario;
+
+    abrirModal('modal-editar-resena');
+}
+
+
+
 
 // Inicialización del panel de paciente
 cargarEspecialidades();
