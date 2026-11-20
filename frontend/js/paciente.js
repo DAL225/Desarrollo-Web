@@ -1,64 +1,120 @@
 const usuario = protegerPagina('PACIENTE');
 let medicoActual = null; // Correo del médico abierto en el modal
 
-document.getElementById('nombre-usuario').textContent = usuario.nombre;
-document.getElementById('btn-salir').onclick = cerrarSesion;
+// Elementos const DOM solicitados (con respaldo a los IDs de paciente.html)
+const inpBarraBusqueda = document.getElementById('inpBarraBusqueda') || document.getElementById('buscar');
+const selectEspecialidad = document.getElementById('selectEspecialidad') || document.getElementById('filtro-especialidad');
+const divListaMedicos = document.getElementById('divListaMedicos') || document.getElementById('lista-medicos');
+
+// Variable global para almacenar el listado de médicos
+let listaMedicos = [];
+
+/**
+ * Obtiene la lista de médicos disponibles desde la fuente de datos (usuarios con rol MEDICO).
+ * @returns {Array<Object>} Arreglo de objetos médico.
+ */
+function obtenerListaMedicos() {
+  return obtenerUsuarios().filter(u => u.rol === 'MEDICO');
+}
+
+// Listener DOMContentLoaded que ejecuta la carga inicial y renderizado del directorio
+document.addEventListener('DOMContentLoaded', () => {
+  if (usuario) {
+    document.getElementById('nombre-usuario').textContent = usuario.nombre;
+  }
+  const btnSalir = document.getElementById('btn-salir');
+  if (btnSalir) btnSalir.onclick = cerrarSesion;
+
+  cargarEspecialidades();
+  renderizarDirectorio();
+  cargarCitas();
+  if (typeof cargarRecetas === 'function') {
+    cargarRecetas();
+  }
+});
 
 // ---------- Directorio ----------
 function cargarEspecialidades() {
-  const sel = document.getElementById('filtro-especialidad');
-  if (!sel) return;
-  const lista = ["Dermatología", "Cardiología", "Ginecología", "Neurología", "Pediatría", "Psiquiatría", "Traumatología", "Medicina general"];
+  if (!selectEspecialidad) return;
+  const lista = [
+    "Dermatología", "Cardiología", "Ginecología", "Neurología",
+    "Pediatría", "Psiquiatría", "Traumatología", "Medicina general"
+  ];
   lista.forEach(e => {
     const o = document.createElement('option');
     o.value = e;
     o.textContent = e;
-    sel.appendChild(o);
+    selectEspecialidad.appendChild(o);
   });
 }
 
-function cargarMedicos() {
-  const cont = document.getElementById('lista-medicos');
-  if (!cont) return;
-  const texto = document.getElementById('buscar').value.toLowerCase();
-  const esp = document.getElementById('filtro-especialidad').value;
-  cont.innerHTML = '';
+/**
+ * Renderiza las tarjetas de los médicos en divListaMedicos aplicando los filtros activos.
+ */
+function renderizarDirectorio() {
+  if (!divListaMedicos) return;
 
-  const lista = obtenerUsuarios().filter(u => 
-    u.rol === 'MEDICO' && 
-    (!esp || u.especialidad === esp) && 
-    (u.nombre + u.especialidad).toLowerCase().includes(texto)
+  const texto = inpBarraBusqueda ? inpBarraBusqueda.value.toLowerCase() : '';
+  const esp = selectEspecialidad ? selectEspecialidad.value : '';
+
+  // Se actualiza la variable global listaMedicos
+  listaMedicos = obtenerListaMedicos().filter(m =>
+    (!esp || m.especialidad === esp) &&
+    (m.nombre + ' ' + m.especialidad).toLowerCase().includes(texto)
   );
 
-  if (!lista.length) {
-    cont.innerHTML = '<p class="texto-suave">Sin resultados.</p>';
+  // Se limpia la sección de divListaMedicos
+  divListaMedicos.innerHTML = '';
+
+  if (!listaMedicos.length) {
+    divListaMedicos.innerHTML = '<p class="texto-suave">Sin resultados.</p>';
     return;
   }
 
-  lista.forEach(m => {
-    const t = clonar('plantilla-medico');
-    poner(t, '.med-inicial', m.nombre.replace(/^Dra?\.\s/, '').split(' ').map(p => p[0]).join('').slice(0, 2));
-    poner(t, '.med-nombre', m.nombre);
-    poner(t, '.med-datos', m.especialidad + ' · Céd. ' + m.cedula);
-    poner(t, '.med-direccion', '📍 ' + m.direccion);
-    poner(t, '.med-promedio', calcularPromedioMedico(m.correo));
-    t.querySelector('.btn-ver').onclick = () => abrirMedico(m.correo);
-    cont.appendChild(t);
+  // Se itera sobre cada objeto doctor recuperado para construir su tarjeta/botón
+  listaMedicos.forEach(doctor => {
+    const promedio = typeof calcularPromedioMedico === 'function'
+      ? calcularPromedioMedico(doctor.correo)
+      : '★ N/A';
+
+    divListaMedicos.innerHTML += `
+      <article class="tarjeta">
+        <div class="divPanelContenido">
+          <div class="datos">
+            <h3>${doctor.nombre}</h3>
+            <p class="texto-suave">${doctor.especialidad} · Céd. ${doctor.cedula}</p>
+          </div>
+          <div class="direccion">
+            <p class="texto-suave">📍 ${doctor.direccion}</p>
+          </div>
+          <div class="detalles fila-pie">
+            <span class="nota">${promedio}</span>
+            <button type="button" class="boton chico btn-ver" onclick="abrirMedico('${doctor.correo}')">
+              Ver horarios
+            </button>
+          </div>
+        </div>
+      </article>
+    `;
   });
 }
 
-document.getElementById('buscar')?.addEventListener('input', cargarMedicos);
-document.getElementById('filtro-especialidad')?.addEventListener('change', cargarMedicos);
+// Eventos de filtrado dinámico en barra de búsqueda y select de especialidad
+inpBarraBusqueda?.addEventListener('input', renderizarDirectorio);
+selectEspecialidad?.addEventListener('change', renderizarDirectorio);
 
 // ---------- Modal Médico: Horarios y Reseñas ----------
 function abrirMedico(correo) {
   const m = buscarUsuario(correo);
+  if (!m) return;
   medicoActual = correo;
   document.getElementById('medico-nombre').textContent = m.nombre;
   document.getElementById('medico-datos').textContent = m.especialidad + ' · Céd. ' + m.cedula;
   document.getElementById('medico-direccion').textContent = '📍 ' + m.direccion;
   cargarHorarios();
-  cargarResenasModal();
+  if (typeof cargarResenasModal === 'function') {
+    cargarResenasModal();
+  }
   abrirModal('modal-medico');
 }
 
@@ -87,7 +143,7 @@ function cargarHorarios() {
 // ---------- Mis Citas ----------
 function cargarCitas() {
   const cont = document.getElementById('lista-citas');
-  if (!cont) return;
+  if (!cont || !usuario) return;
   const todas = obtenerCitas();
   const mias = todas.filter(c => c.idPaciente === usuario.correo).sort((a, b) => b.fecha.localeCompare(a.fecha));
   const activas = mias.filter(c => c.estado === 'RESERVADA').length;
@@ -138,9 +194,3 @@ function cargarCitas() {
     cont.appendChild(t);
   });
 }
-
-// Inicialización del panel de paciente
-cargarEspecialidades();
-cargarMedicos();
-cargarCitas();
-cargarRecetas();

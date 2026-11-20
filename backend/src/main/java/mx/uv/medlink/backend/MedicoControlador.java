@@ -1,12 +1,18 @@
 package mx.uv.medlink.backend;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = "*")
@@ -18,6 +24,13 @@ public class MedicoControlador {
 
     @Autowired
     private UsuarioService usuarioService;
+
+
+// Patrones globales para validaciones
+    String patronNombre = "^[A-Za-zÁÉÍÓÚáéíóúÑñ\\s]+$";
+    String patronCorreo = "^[A-Za-z0-9._%+-]{1,20}@gmail\\.com$";
+    String patronPassword = "^\\S{1,20}$";
+    String patronTelefono = "^[0-9]{10}$";
 
     /**
      * Consulta el listado completo de médicos registrados en el sistema.
@@ -170,66 +183,83 @@ public class MedicoControlador {
 
     /**
      * Registra un nuevo médico relacionado a una tupla de usuario existente tras validar la integridad de los datos.
-     * 
-     * @param idUsuario identificador del usuario asociado al médico.
-     * @param cedula cédula profesional del médico.
-     * @param especialidad especialidad del medico.
-     * @param direccion ubicación del médico.
-     * @return un mensaje de confirmacion del proceso.
      */
-    @PostMapping("/api/medicos/registro/{idUsuario}/{cedula}/{especialidad}/{direccion}")
-    public Object agregarMedico(
-            @PathVariable String idUsuario,
-            @PathVariable String cedula,
-            @PathVariable String especialidad,
-            @PathVariable String direccion) {
-    // Se valida que cada uno de los satos enviados por el usuario tengan valor no nulo y texto existente
-        if (idUsuario == null) {
-            return "El identificador de usuario no puede ser nulo";
+    @PostMapping("/api/medicos/registro")
+    public ResponseEntity <Map<String, Object>> agregarMedico(@RequestBody Map<String, Object> body) {
+        // Se instancia la entidad para las respuestas
+        Map<String, Object> res = new HashMap<>();
+
+        // Si los datos enviados por el usuario estan vacios se envia el mensaje de error
+        if (body == null) {
+            res.put("ok", false);
+            res.put("mensaje", "El cuerpo de la solicitud no puede ser nulo");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
         }
-        if (idUsuario.length() == 0) {
-            return "El identificador de usuario no puede estar vacío";
+
+        // Se recuperan los datos en formato JSON y en la misma linea se parsean a texto
+        String nombre = body.get("nombre") != null ? String.valueOf(body.get("nombre")).trim() : "";
+        String correo = body.get("correo") != null ? String.valueOf(body.get("correo")).trim() : "";
+        String contrasena = body.get("contrasena") != null ? String.valueOf(body.get("contrasena")) : "";
+        String telefono = body.get("telefono") != null ? String.valueOf(body.get("telefono")).trim() : "";
+        String cedula = body.get("cedula") != null ? String.valueOf(body.get("cedula")).trim() : "";
+        String especialidad = body.get("especialidad") != null ? String.valueOf(body.get("especialidad")).trim() : "";
+        String direccion = body.get("direccion") != null ? String.valueOf(body.get("direccion")).trim() : "";
+
+        // Se realizan las verificaciones con los patrones para obtener datos correctos, en caso de que alguna falle se envia un mensaje de error explicando la situacion
+        if (nombre.isEmpty() || !nombre.matches(patronNombre)) {
+            res.put("ok", false);
+            res.put("mensaje", "Nombre inválido");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
         }
-        if (cedula == null) {
-            return "La cédula no puede ser nula";
+        if (correo.isEmpty() || !correo.matches("(?i)" + patronCorreo)) {
+            res.put("ok", false);
+            res.put("mensaje", "Correo inválido");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
         }
-        if (cedula.length() == 0) {
-            return "La cédula no puede estar vacía";
+        if (contrasena.isEmpty() || !contrasena.matches(patronPassword)) {
+            res.put("ok", false);
+            res.put("mensaje", "Contraseña inválida");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
         }
-        if (especialidad == null) {
-            return "La especialidad no puede ser nula";
+        if (telefono.isEmpty() || !telefono.matches(patronTelefono)) {
+            res.put("ok", false);
+            res.put("mensaje", "Teléfono inválido: deben ser 10 dígitos numéricos");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
         }
-        if (especialidad.length() == 0) {
-            return "La especialidad no puede estar vacía";
+        if (cedula.isEmpty() || especialidad.isEmpty() || direccion.isEmpty()) {
+            res.put("ok", false);
+            res.put("mensaje", "Cédula, especialidad y dirección son obligatorias para médicos");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
         }
-        if (direccion == null) {
-            return "La dirección no puede ser nula";
-        }
-        if (direccion.length() == 0) {
-            return "La dirección no puede estar vacía";
-        }
-    
+
+        //Si se pasaron todas las verificaciones entonces se procede a agregar al usuario a la BD
         try {
-        //Se parsea el id del usuario a entero
-            int idUsuarioInt = Integer.parseInt(idUsuario);
-        //Buscamos al usuario existente en la BD y lo recuperamos
-            Usuario usuarioAsociado = usuarioService.obtenerUsuarioPorId(idUsuarioInt);
-        //En caso de que el usuario no se pudiera recuperar
-            if (usuarioAsociado == null) {
-                return "El usuario asociado no existe en la base de datos";
-            }
-        //Se agrega el nuevo medico a la BD y se recupera el objeto
-            Medico nuevoMedico = medicoService.agregarMedico(usuarioAsociado, cedula, especialidad, direccion);
-        //Si se recupero el objeto medico entonces se envia un mensaje de confirmacion
-            if (nuevoMedico != null) {
-                return "Médico agregado correctamente";
-            } else {
-                return "No se pudo registrar el perfil de médico";
-            }
-        } catch (NumberFormatException e) {
-            return "El identificador de usuario debe ser un número entero válido";
+            Usuario nuevoMedico = usuarioService.crearUsuario(nombre, correo, contrasena, telefono, "medico");
+            //Se agrega al nuevo medico en la BD
+            medicoService.agregarMedico(nuevoMedico, cedula, especialidad, direccion);
+            // Luego se recupera el objeto usuario creado y se le agrega la informacion para enviarla en la respuesta y agregarla al session storage
+            Map<String, Object> perfilMedico = new HashMap<>();
+            perfilMedico.put("idUsuario", nuevoMedico.getIdUsuario());
+            perfilMedico.put("nombre", nuevoMedico.getNombre());
+            perfilMedico.put("correo", nuevoMedico.getCorreo());
+            perfilMedico.put("telefono", nuevoMedico.getTelefono());
+            perfilMedico.put("rol", nuevoMedico.getRol());
+            perfilMedico.put("cedula", cedula);
+            perfilMedico.put("especialidad", especialidad);
+            perfilMedico.put("direccion", direccion);
+
+            res.put("ok", true);
+            res.put("mensaje", "Médico registrado correctamente");
+            res.put("medico", perfilMedico);
+            return ResponseEntity.status(HttpStatus.CREATED).body(res);
+        } catch (IllegalArgumentException e) {
+            res.put("ok", false);
+            res.put("mensaje", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
         } catch (Exception e) {
-            return "Error interno al procesar el registro del médico";
+            res.put("ok", false);
+            res.put("mensaje", "Error interno al procesar el registro del médico");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
         }
     }
 
