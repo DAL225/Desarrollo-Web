@@ -98,7 +98,7 @@ async function login() {
   try {
     const correo = inpCorreo ? inpCorreo.value.trim() : "";
     const psw = inpPassword ? inpPassword.value : "";
-    const response = await fetch("/api/usuarios/login", {
+    const response = await fetch("http://localhost:8081/api/usuarios/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
