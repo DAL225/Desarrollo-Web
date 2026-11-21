@@ -23,7 +23,7 @@ Pruebas de persistencia \
 |------------|------------------------|-----------------|
 |Implementacion PUT y DELETE| Misael | https://github.com/DAL225/Desarrollo-Web/commit/6a39eac30a4fc2ef3c2331f218bf611cdb67b9de|
 |Implementación de ventana login, registrar, paciente y medico  | Cesar | https://github.com/DAL225/Desarrollo-Web/commit/1d0d3e70b1de9a5abf3c3335dbe9922cf397d0a2 |
-| | | |
+|Implementación GET de Citas| Diego | https://github.com/DAL225/Desarrollo-Web/commit/739ba73f5a5191d540295951999f108323f6aa38 |
 
 ---
 
@@ -65,7 +65,7 @@ Forma en que se verificó el resultado: Analizando las respuestas de curl, y ver
 
 Describir brevemente la contribución de cada integrante.
 
-- **Diego:** 
+- **Diego:** Implementación GET de las clases que manejan las Citas
 - **Misael:** Reestructuracion de manejo de Resena, implementacion PUT.
 - **Cesar:** Desarrollo de backend y frontend
 
