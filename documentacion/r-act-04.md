@@ -21,7 +21,7 @@ Pruebas de persistencia \
 
 | Actividad | Integrante responsable | Enlace a commit |
 |------------|------------------------|-----------------|
-|Implementacion PUT y DELETE| Misael | https://github.com/DAL225/Desarrollo-Web/commit/6a39eac30a4fc2ef3c2331f218bf611cdb67b9de|
+|Implementación de reseñas | Misael | https://github.com/DAL225/Desarrollo-Web/commit/6a39eac30a4fc2ef3c2331f218bf611cdb67b9de|
 |Implementación de ventana login, registrar, paciente y medico  | Cesar | https://github.com/DAL225/Desarrollo-Web/commit/1d0d3e70b1de9a5abf3c3335dbe9922cf397d0a2 |
 |Implementación GET de Citas| Diego | https://github.com/DAL225/Desarrollo-Web/commit/739ba73f5a5191d540295951999f108323f6aa38 |
 
