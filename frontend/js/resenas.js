@@ -124,9 +124,9 @@ function cargarResenasModal(listaResenas) {
 document.getElementById('orden-resenas')?.addEventListener('change', cargarResenasModal);
 document.getElementById('rango-resenas')?.addEventListener('change', cargarResenasModal);
 
-function abrirModalResena(c) {
+async function abrirModalResena(c) {
   citaActualResena = c;
-  const med = buscarUsuario(c.idMedico);
+  const med = await buscarUsuario(c.idMedico);
   document.getElementById('resena-info').textContent = 'Califica la atención de ' + (med ? med.nombre : c.idMedico);
   document.getElementById('form-resena').reset();
   document.getElementById('valor-calificacion').textContent = '8';

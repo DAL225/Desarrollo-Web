@@ -1,11 +1,58 @@
-function obtenerCitas() {
-  return leer('citas', [
-    { id: 1, idMedico: 'medico@correo.com', fecha: fechaMas(-7), inicio: '10:00', fin: '10:30', estado: 'ATENDIDA', idPaciente: 'paciente@correo.com' },
-    { id: 2, idMedico: 'medico@correo.com', fecha: fechaMas(2), inicio: '09:00', fin: '09:30', estado: 'DISPONIBLE', idPaciente: null },
-    { id: 3, idMedico: 'medico@correo.com', fecha: fechaMas(2), inicio: '10:00', fin: '10:30', estado: 'DISPONIBLE', idPaciente: null },
-    { id: 4, idMedico: 'medico2@correo.com', fecha: fechaMas(3), inicio: '16:00', fin: '16:30', estado: 'DISPONIBLE', idPaciente: null },
-    { id: 5, idMedico: 'medico@correo.com', fecha: fechaMas(-14), inicio: '12:00', fin: '12:30', estado: 'ATENDIDA', idPaciente: 'paciente2@correo.com' }
-  ]);
+async function obtenerCitasMedico(idMedico) {
+  try {
+    const respuesta = await fetch("http://localhost:8081/api/citas/medico/"+idMedico);
+    if (!respuesta.ok){
+      throw new Error('Error HTTP: ${respuesta.status}');
+    }
+    const datos = await respuesta.json();
+    console.log(datos);
+    return datos;
+  } catch (error){
+    console.error('Hubo un problema con el metodo fetch:', error);
+  }
+}
+
+async function agendarCita(idCita, idUsuario) {
+  try {
+    const respuesta = await fetch("http://localhost:8081/api/citas/"+idCita+"/"+idUsuario+"/agendar", {method: "PUT"});
+    if (!respuesta.ok){
+      throw new Error('Error HTTP: ${respuesta.status}');
+    }
+    const datos = await respuesta.json();
+    console.log(datos);
+    return datos;
+  } catch (error){
+    console.error('Hubo un problema con el metodo fetch:', error);
+  }
+}
+
+
+async function obtenerCitasUsuario(idUsuario) {
+  try {
+    const respuesta = await fetch("http://localhost:8081/api/citas/usuario/"+idUsuario);
+    if (!respuesta.ok){
+      throw new Error('Error HTTP: ${respuesta.status}');
+    }
+    const datos = await respuesta.json();
+    console.log(datos);
+    return datos;
+  } catch (error){
+    console.error('Hubo un problema con el metodo fetch:', error);
+  }
+}
+
+async function obtenerCitasDisponibles() {
+  try {
+    const respuesta = await fetch("http://localhost:8081/api/citas/disponible");
+    if (!respuesta.ok){
+      throw new Error('Error HTTP: ${respuesta.status}');
+    }
+    const datos = await respuesta.json();
+    console.log(datos);
+    return datos;
+  } catch (error){
+    console.error('Hubo un problema con el metodo fetch:', error);
+  }
 }
 
 // Médico: Publicar nueva cita
@@ -45,23 +92,36 @@ function cambiarEstadoCita(id, nuevo) {
 }
 
 // Paciente: Reservar cita
-function reservarCita(id) {
+async function reservarCita(id) {
   const LIMITE_CITAS = 3;
-  const citas = obtenerCitas();
-  const c = citas.find(x => x.id === id);
+  citas = [];
+  citas = await obtenerCitasDisponibles();
+  console.log(citas);
+  let c;
+  citas.forEach(x => {
+    if (x.idCita == id){
+      console.log(x.idCita);
+      console.log(id);
+      c = x;      
+    }
+  });
 
-  if (!c || c.estado !== 'DISPONIBLE' || c.idPaciente) return mostrarMensaje('La cita ya no está disponible.');
+  if (!c || c.estado !== 'DISPONIBLE' || c.idUsuario) return mostrarMensaje('La cita ya no está disponible.');
   
-  const mias = citas.filter(x => x.idPaciente === usuario.correo && x.estado === 'RESERVADA');
+  let mias = [];
+  citas.forEach(x => {
+    if (x.idUsuario === usuario.idUsuario && x.estado === 'RESERVADA'){
+      mias.push(x);
+    }
+  })
+  console.log(mias);
   if (mias.length >= LIMITE_CITAS) return mostrarMensaje('Llegaste al límite de ' + LIMITE_CITAS + ' citas activas.');
   
   if (mias.some(x => x.fecha === c.fecha && x.inicio < c.fin && c.inicio < x.fin)) {
     return mostrarMensaje('Se cruza con otra de tus citas.');
   }
 
-  c.estado = 'RESERVADA';
-  c.idPaciente = usuario.correo;
-  guardar('citas', citas);
+  agendarCita(c.idCita,usuario.id);
   mostrarMensaje('Cita reservada');
   if (typeof cargarHorarios === 'function') cargarHorarios();
   if (typeof cargarCitas === 'function') cargarCitas();

@@ -1,24 +1,66 @@
-// ---------- Sesión (sessionStorage) ----------
+// ---------- Sesión (localStorage y sessionStorage) ----------
+
+/**
+ * Almacena en localStorage los datos esenciales del usuario que inicia sesión.
+ * Se serializa el objeto a formato JSON para persistir id, nombre, correo, telefono y rol.
+ * @param {Object} u Objeto con los datos del usuario autenticado.
+ */
 function guardarSesion(u) {
-  sessionStorage.setItem('usuario', JSON.stringify(u));
+  // Se construye un objeto limpio únicamente con los atributos requeridos para la sesión
+  const datosSesion = {
+    id: u.idUsuario || u.id || null,
+    nombre: u.nombre || '',
+    correo: u.correo || '',
+    telefono: u.telefono || '',
+    rol: u.rol ? u.rol.toUpperCase() : ''
+  };
+
+  // Se guarda la cadena JSON en localStorage bajo la clave 'usuario'
+  localStorage.setItem('usuario', JSON.stringify(datosSesion));
+  // Se respalda en sessionStorage para compatibilidad con vistas activas
+  sessionStorage.setItem('usuario', JSON.stringify(datosSesion));
 }
 
+/**
+ * Recupera los datos de la sesión activa desde localStorage.
+ * Convierte la cadena JSON almacenada nuevamente en un objeto de JavaScript.
+ * @returns {Object|null} Objeto usuario o null si no existe sesión activa.
+ */
 function obtenerSesion() {
-  return JSON.parse(sessionStorage.getItem('usuario'));
+  // Se obtiene el registro almacenado en localStorage
+  const sesionLocal = localStorage.getItem('usuario');
+  // Si existe información, se parsea y retorna; de lo contrario, se devuelve null
+  return sesionLocal ? JSON.parse(sesionLocal) : null;
 }
 
+/**
+ * Elimina los datos de la sesión activa en el navegador y redirige al inicio.
+ */
 function cerrarSesion() {
+  // Se remueve la clave 'usuario' tanto de localStorage como de sessionStorage
+  localStorage.removeItem('usuario');
   sessionStorage.removeItem('usuario');
+  // Se redirige a la pantalla de inicio de sesión
   location.href = 'index.html';
 }
 
+/**
+ * Redirige al panel correspondiente según el rol del usuario autenticado.
+ * @param {Object} u Objeto usuario con la propiedad rol.
+ */
 function irAPanel(u) {
-  location.href = u.rol === 'MEDICO' ? 'medico.html' : 'paciente.html';
+  const rolNormalizado = u.rol ? u.rol.toUpperCase() : '';
+  location.href = rolNormalizado === 'MEDICO' ? 'medico.html' : 'paciente.html';
 }
 
+/**
+ * Verifica si existe una sesión activa y si el rol coincide con el requerido por la vista.
+ * @param {string} rol Rol esperado ('PACIENTE' o 'MEDICO').
+ * @returns {Object|null} Objeto usuario válido o null tras redirigir.
+ */
 function protegerPagina(rol) {
   const u = obtenerSesion();
-  if (!u || u.rol !== rol) {
+  if (!u || u.rol.toUpperCase() !== rol.toUpperCase()) {
     location.href = 'index.html';
     return null;
   }
@@ -97,21 +139,52 @@ document.addEventListener('click', e => {
 });
 
 // Datos iniciales de usuarios demo (Se pasará a la API más adelante)
-function obtenerUsuarios() {
-  const USUARIOS_DEMO = [
-    { correo: 'paciente@correo.com', clave: '1234', nombre: 'Ana Torres', rol: 'PACIENTE' },
-    { correo: 'paciente2@correo.com', clave: '1234', nombre: 'Luis Pérez', rol: 'PACIENTE' },
-    { correo: 'medico@correo.com', clave: '1234', nombre: 'Dra. Elena Vargas', rol: 'MEDICO', cedula: '8451203', especialidad: 'Cardiología', direccion: 'Av. Reforma 120, Consultorio 4' },
-    { correo: 'medico2@correo.com', clave: '1234', nombre: 'Dr. Marcos Rivera', rol: 'MEDICO', cedula: '7392045', especialidad: 'Pediatría', direccion: 'Calle Hidalgo 58, Centro' }
-  ];
-  return  USUARIOS_DEMO;
+async function obtenerUsuarios() {
+  try {
+    const respuesta = await fetch("http://localhost:8081/api/usuarios");
+    if (!respuesta.ok){
+      throw new Error('Error HTTP: ${respuesta.status}');
+    }
+    const datos = await respuesta.json();
+    console.log(datos);
+    return datos;
+  } catch (error){
+    console.error('Hubo un problema con el metodo fetch:', error);
+  }
 }
 
-function nombreUsuario(correo) {
-  const u = obtenerUsuarios().find(x => x.correo === correo);
-  return u ? u.nombre : correo;
+async function nombreUsuario(correo) {
+  var listaUsuario = [];
+  listaUsuario = await obtenerUsuarios();
+  listaUsuario.forEach(element => {
+    if (element.correo === correo){
+      console.log(element ? element.nombre : corre);
+      return element ? element.nombre : correo;
+    }
+  });
 }
 
-function buscarUsuario(correo) {
-  return obtenerUsuarios().find(x => x.correo === correo);
+async function buscarUsuario(correo) {
+  let listaUsuario = [];
+  listaUsuario = await obtenerUsuarios();
+  listaUsuario.forEach(element => {
+    if (element.correo == correo){
+      console.log(element);
+      return element;
+    }
+  });
+}
+
+async function obtenerMedicos() {
+  try {
+    const respuesta = await fetch("http://localhost:8081/api/medicos");
+    if (!respuesta.ok){
+      throw new Error('Error HTTP: ${respuesta.status}');
+    }
+    const datos = await respuesta.json();
+    console.log(datos);
+    return datos;
+  } catch (error){
+    console.error('Hubo un problema con el metodo fetch:', error);
+  }
 }
