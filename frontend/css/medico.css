@@ -1,8 +1,33 @@
 /* Panel del medico */
-.contadores{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.7rem;margin:1rem 0}
-.contador{background:var(--tarjeta);border:1px solid var(--borde);border-radius:12px;padding:.8rem}
-.contador b{display:block;font-size:1.4rem;color:var(--oscuro)}
+.contadores {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: .7rem;
+    margin: 1rem 0
+}
+
+.contador {
+    background: var(--tarjeta);
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+    padding: .8rem
+}
+
+.contador b {
+    display: block;
+    font-size: 1.4rem;
+    color: var(--oscuro)
+}
 
 /* Formulario de nueva cita (modal-cita) */
-.fila-tres{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem}
-@media(max-width:560px){.fila-tres{grid-template-columns:1fr}}
+.fila-tres {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .7rem
+}
+
+@media(max-width:560px) {
+    .fila-tres {
+        grid-template-columns: 1fr
+    }
+}

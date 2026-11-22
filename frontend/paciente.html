@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,6 +8,7 @@
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/paciente.css">
 </head>
+
 <body>
   <header class="encabezado">
     <span class="marca">✚ MedLink</span>
@@ -25,7 +27,9 @@
       <p class="texto-suave">Encuentra al especialista adecuado y reserva tu cita.</p>
       <div class="fila-filtros">
         <input id="buscar" placeholder="Buscar por nombre o especialidad">
-        <select id="filtro-especialidad"><option value="">Todas las especialidades</option></select>
+        <select id="filtro-especialidad">
+          <option value="">Todas las especialidades</option>
+        </select>
       </div>
       <div class="cuadricula" id="lista-medicos"></div>
     </section>
@@ -43,7 +47,7 @@
     </section>
   </main>
 
-  <!-- Modal: detalle del medico (horarios y resenas) -->
+  <!-- Modal: detalle del medico (horarios) -->
   <div class="modal" id="modal-medico">
     <div class="modal-caja">
       <h2 id="medico-nombre"></h2>
@@ -52,28 +56,6 @@
 
       <h3 class="subtitulo">Horarios disponibles</h3>
       <div id="lista-horarios"></div>
-
-      <h3 class="subtitulo">Reseñas</h3>
-      <div class="fila-dos">
-        <div>
-          <label for="orden-resenas">Ordenar por</label>
-          <select id="orden-resenas">
-            <option value="mayor">Mejor calificación</option>
-            <option value="menor">Menor calificación</option>
-            <option value="reciente">Más recientes</option>
-          </select>
-        </div>
-        <div>
-          <label for="rango-resenas">Calificación</label>
-          <select id="rango-resenas">
-            <option value="todas">Todas</option>
-            <option value="alta">9 – 10</option>
-            <option value="media">7 – 8</option>
-            <option value="baja">1 – 6</option>
-          </select>
-        </div>
-      </div>
-      <div id="lista-resenas"></div>
       <div class="acciones"><button class="boton secundario" data-cerrar>Cerrar</button></div>
     </div>
   </div>
@@ -115,64 +97,65 @@
     </div>
   </div>
 
-  <!-- Plantillas de tarjetas (se clonan desde JS) -->
-  <template id="plantilla-medico">
-    <article class="tarjeta">
-      <div class="med-cabecera">
-        <div class="avatar med-inicial"></div>
-        <div><h3 class="med-nombre"></h3><p class="texto-suave med-datos"></p></div>
-      </div>
-      <p class="texto-suave med-direccion"></p>
-      <div class="fila-pie">
-        <span class="nota med-promedio"></span>
-        <button class="boton chico btn-ver">Ver horarios</button>
-      </div>
-    </article>
-  </template>
+  <!-- Modal: lista de resenas -->
+  <div class="modal" id="modal-lista-resenas">
+    <div class="modal-caja">
+      <h2>Reseñas</h2>
+      <div class="modal-caja">
+        <!-- Promedio -->
+        <div class="promedio-general">
+          <span class="promedio-valor" id="promedio-resenas">0.0</span>
+          <span class="texto-suave"> / 10 · Promedio general</span>
+        </div>
 
-  <template id="plantilla-horario">
-    <div class="fila-resena fila-pie sin-margen">
-      <div><b class="hor-fecha"></b><p class="texto-suave hor-hora"></p></div>
-      <button class="boton chico btn-reservar">Reservar</button>
+        <div class="fila-dos">
+          <div>
+            <label for="orden-resenas">Ordenar por</label>
+            <select id="orden-resenas">
+              <option value="mayor">Mejor calificación</option>
+              <option value="menor">Menor calificación</option>
+              <option value="reciente">Más recientes</option>
+            </select>
+          </div>
+          <div>
+            <label for="rango-resenas">Calificación</label>
+            <select id="rango-resenas">
+              <option value="todas">Todas</option>
+              <option value="alta">9 – 10</option>
+              <option value="media">7 – 8</option>
+              <option value="baja">1 – 6</option>
+            </select>
+          </div>
+        </div>
+        <div id="lista-resenas"></div>
+      </div>
     </div>
-  </template>
 
-  <template id="plantilla-resena">
-    <div class="fila-resena">
-      <span class="nota res-nota"></span> <span class="texto-suave res-fecha"></span>
-      <p class="res-texto"></p>
+    <div id="modal-editar-resena" class="modal">
+      <div class="modal-caja">
+        <h2>Editar reseña</h2>
+
+        <form id="form-editar-resena">
+          <input type="hidden" id="id-resena">
+
+          <label for="editar-comentario">Comentario</label>
+          <textarea id="editar-comentario" rows="4" placeholder="Escribe tu comentario..." required></textarea>
+
+          <div class="fila-dos">
+            <button type="submit" class="boton principal">
+              Guardar cambios
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-  </template>
 
-  <template id="plantilla-cita">
-    <article class="tarjeta">
-      <div class="fila-pie sin-margen">
-        <h3 class="cita-medico"></h3>
-        <span class="estado cita-estado"></span>
-      </div>
-      <p class="texto-suave cita-fecha"></p>
-      <div class="acciones">
-        <button class="boton secundario chico btn-cancelar">Cancelar</button>
-        <button class="boton secundario chico btn-receta">Ver receta</button>
-        <button class="boton chico btn-resena">Dejar reseña</button>
-      </div>
-    </article>
-  </template>
 
-  <template id="plantilla-receta">
-    <article class="tarjeta">
-      <h3 class="rec-medico"></h3>
-      <p class="texto-suave rec-fecha"></p>
-      <p class="rec-diagnostico"></p>
-      <div class="acciones"><button class="boton chico btn-ver-receta">Ver detalle / PDF</button></div>
-    </article>
-  </template>
-
-  <div id="mensaje"></div>
-  <script src="js/comun.js"></script>
-  <script src="js/recetas.js"></script>
-  <script src="js/citas.js"></script>
-  <script src="js/resenas.js"></script>
-  <script src="js/paciente.js"></script>
+    <div id="mensaje"></div>
+    <script src="js/recetas.js"></script>
+    <script src="js/citas.js"></script>
+    <script src="js/resenas.js"></script>
+    <script src="js/paciente.js"></script>
 </body>
+
 </html>

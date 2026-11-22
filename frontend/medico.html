@@ -13,6 +13,7 @@
     <nav class="menu">
       <button class="activo" data-seccion="seccion-agenda">Agenda</button>
       <button data-seccion="seccion-recetas">Recetas</button>
+      <button data-seccion="seccion-resenas" onclick="mostrarResenas()">Mis reseñas</button>
     </nav>
     <span class="usuario" id="nombre-usuario"></span>
     <button class="boton secundario chico" id="btn-salir">Salir</button>
@@ -37,6 +38,36 @@
       <h1>Recetas emitidas</h1>
       <p class="texto-suave">Solo se emiten recetas para citas atendidas.</p>
       <div class="cuadricula" id="lista-recetas"></div>
+    </section>
+
+    <section class="seccion" id="seccion-resenas">
+      <h1>Reseñas recibidas</h1>
+      <!-- Promedio -->
+        <div class="promedio-general">
+          <span class="promedio-valor" id="promedio-resenas">0.0</span>
+          <span class="texto-suave"> / 10 · Promedio general</span>
+        </div>
+
+        <div class="fila-dos">
+          <div>
+            <label for="orden-resenas">Ordenar por</label>
+            <select id="orden-resenas">
+              <option value="mayor">Mejor calificación</option>
+              <option value="menor">Menor calificación</option>
+              <option value="reciente">Más recientes</option>
+            </select>
+          </div>
+          <div>
+            <label for="rango-resenas">Calificación</label>
+            <select id="rango-resenas">
+              <option value="todas">Todas</option>
+              <option value="alta">9 – 10</option>
+              <option value="media">7 – 8</option>
+              <option value="baja">1 – 6</option>
+            </select>
+          </div>
+        </div>
+        <div id="lista-resenas"></div>
     </section>
   </main>
 
@@ -79,33 +110,8 @@
     </div>
   </div>
 
-  <!-- Plantillas de tarjetas -->
-  <template id="plantilla-agenda">
-    <article class="tarjeta">
-      <div class="fila-pie sin-margen">
-        <h3 class="ag-fecha"></h3>
-        <span class="estado ag-estado"></span>
-      </div>
-      <p class="texto-suave ag-hora"></p>
-      <p class="texto-suave ag-paciente"></p>
-      <div class="acciones">
-        <button class="boton chico btn-atender">Marcar atendida</button>
-        <button class="boton secundario chico btn-cancelar">Cancelar</button>
-        <button class="boton chico btn-receta">Emitir receta</button>
-      </div>
-    </article>
-  </template>
-
-  <template id="plantilla-receta-emitida">
-    <article class="tarjeta">
-      <h3 class="rec-paciente"></h3>
-      <p class="texto-suave rec-fecha"></p>
-      <p class="rec-diagnostico"></p>
-    </article>
-  </template>
 
   <div id="mensaje"></div>
-    <script src="js/comun.js"></script>
   <script src="js/recetas.js"></script>
   <script src="js/citas.js"></script>
   <script src="js/resenas.js"></script>
