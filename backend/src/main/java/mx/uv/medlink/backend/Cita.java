@@ -10,11 +10,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 
 @Entity
 public class Cita {
-    
+
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int idCita;
 
     @Column(nullable = false)
@@ -44,29 +47,31 @@ public class Cita {
     @Enumerated(EnumType.STRING)
     private estado estado;
 
-    public Cita(){
+    public Cita() {
     }
 
-    public Cita(LocalDate fecha, LocalTime hora_inicio, LocalTime hora_fin, Medico medico, Usuario usuario, estado estado){
-        if (fecha == null ){
+    public Cita(LocalDate fecha, LocalTime hora_inicio, LocalTime hora_fin, Medico medico, Usuario usuario,
+            estado estado) {
+        if (fecha == null) {
             throw new IllegalArgumentException("La fecha debe de ser una fecha valida.");
         }
-        if (hora_inicio == null){
+        if (hora_inicio == null) {
             throw new IllegalArgumentException("Debe establecerse una hora valida.");
         }
-        if (hora_fin == null){
+        if (hora_fin == null) {
             throw new IllegalArgumentException("Debe establecerse una hora valida.");
         }
-        if (medico == null){
+        if (medico == null) {
             throw new IllegalArgumentException("La Cita debe estar asociada obligatoriamente a un médico.");
         }
-        if (estado == null){
+        if (estado == null) {
             throw new IllegalArgumentException("El estado debe ser uno de los estados valido.");
         }
         this.fecha = fecha;
         this.hora_inicio = hora_inicio;
         this.hora_fin = hora_fin;
         this.medico = medico;
+        this.usuario = usuario;
         this.estado = estado;
     }
 

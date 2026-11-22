@@ -110,43 +110,8 @@
     </div>
   </div>
 
-  <!-- Plantillas de tarjetas -->
-  <template id="plantilla-agenda">
-    <article class="tarjeta">
-      <div class="fila-pie sin-margen">
-        <h3 class="ag-fecha"></h3>
-        <span class="estado ag-estado"></span>
-      </div>
-      <p class="texto-suave ag-hora"></p>
-      <p class="texto-suave ag-paciente"></p>
-      <div class="acciones">
-        <button class="boton chico btn-atender">Marcar atendida</button>
-        <button class="boton secundario chico btn-cancelar">Cancelar</button>
-        <button class="boton chico btn-receta">Emitir receta</button>
-      </div>
-    </article>
-  </template>
-
-  <template id="plantilla-receta-emitida">
-    <article class="tarjeta">
-      <h3 class="rec-paciente"></h3>
-      <p class="texto-suave rec-fecha"></p>
-      <p class="rec-diagnostico"></p>
-    </article>
-  </template>
-
-  <template id="plantilla-resena">
-      <div class="fila-resena">
-        <span class="nota res-nota"></span> <span class="texto-suave res-fecha"></span>
-        <p class="res-texto"></p>
-        <button class="boton chico btn-editar-resena" style="display: none;">
-          Editar
-        </button>
-      </div>
-    </template>
 
   <div id="mensaje"></div>
-    <script src="js/comun.js"></script>
   <script src="js/recetas.js"></script>
   <script src="js/citas.js"></script>
   <script src="js/resenas.js"></script>

@@ -150,69 +150,8 @@
       </div>
     </div>
 
-    <!-- Plantillas de tarjetas (se clonan desde JS) -->
-    <template id="plantilla-medico">
-      <article class="tarjeta">
-        <div class="med-cabecera">
-          <div class="avatar med-inicial"></div>
-          <div>
-            <h3 class="med-nombre"></h3>
-            <p class="texto-suave med-datos"></p>
-          </div>
-        </div>
-        <p class="texto-suave med-direccion"></p>
-        <div class="fila-pie">
-          <button class="boton chico btn-ver-resena">Ver reseñas</button>
-          <button class="boton chico btn-ver-horario">Ver horarios</button>
-        </div>
-      </article>
-    </template>
-
-    <template id="plantilla-horario">
-      <div class="fila-resena fila-pie sin-margen">
-        <div><b class="hor-fecha"></b>
-          <p class="texto-suave hor-hora"></p>
-        </div>
-        <button class="boton chico btn-reservar">Reservar</button>
-      </div>
-    </template>
-
-    <template id="plantilla-resena">
-      <div class="fila-resena">
-        <span class="nota res-nota"></span> <span class="texto-suave res-fecha"></span>
-        <p class="res-texto"></p>
-        <button class="boton chico btn-editar-resena" style="display: none;">
-          Editar
-        </button>
-      </div>
-    </template>
-
-    <template id="plantilla-cita">
-      <article class="tarjeta">
-        <div class="fila-pie sin-margen">
-          <h3 class="cita-medico"></h3>
-          <span class="estado cita-estado"></span>
-        </div>
-        <p class="texto-suave cita-fecha"></p>
-        <div class="acciones">
-          <button class="boton secundario chico btn-cancelar">Cancelar</button>
-          <button class="boton secundario chico btn-receta">Ver receta</button>
-          <button class="boton chico btn-resena">Dejar reseña</button>
-        </div>
-      </article>
-    </template>
-
-    <template id="plantilla-receta">
-      <article class="tarjeta">
-        <h3 class="rec-medico"></h3>
-        <p class="texto-suave rec-fecha"></p>
-        <p class="rec-diagnostico"></p>
-        <div class="acciones"><button class="boton chico btn-ver-receta">Ver detalle / PDF</button></div>
-      </article>
-    </template>
 
     <div id="mensaje"></div>
-    <script src="js/comun.js"></script>
     <script src="js/recetas.js"></script>
     <script src="js/citas.js"></script>
     <script src="js/resenas.js"></script>

@@ -1,8 +1,8 @@
 // Patrones globales definidos en la cima del archivo
-const patronNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
-const patronTelefono = /^[0-9]{10}$/;
-const patronCorreo = /^[A-Za-z0-9._%+-]{1,20}@gmail\.com$/i;
-const patronContrasena = /^\S{1,20}$/;
+const patronNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/; // Solo letras (con acentos/ñ) y espacios
+const patronTelefono = /^[0-9]{10}$/; // Exactamente 10 dígitos numéricos
+const patronCorreo = /^[A-Za-z0-9._%+-]{1,20}@gmail\.com$/i; // @gmail.com con parte local de 1 a 20 caracteres
+const patronContrasena = /^\S{1,20}$/; // De 1 a 20 caracteres sin espacios en blanco
 
 // Referencias DOM de los inputs del formulario de registro
 const inpNombre = document.getElementById("inpNombre") || document.getElementById("nombre");
@@ -14,26 +14,24 @@ const inpCedula = document.getElementById("cedula");
 const selectEspecialidad = document.getElementById("especialidad");
 const inpDireccion = document.getElementById("direccion");
 
+// Configura listeners al cargar el DOM para alternar campos de médico y enviar el formulario
 document.addEventListener("DOMContentLoaded", function () {
     const formRegistro = document.getElementById("form-registro");
 
-    // Mostrar/ocultar campos adicionales si el rol es MEDICO
+    // Muestra u oculta el bloque de campos extra según si el rol seleccionado es MEDICO
     if (selectRol) {
         selectRol.addEventListener("change", function () {
-            //Se obtiene el acceso al panel campos-medico que se encuentra oculto
-        const camposMedico = document.getElementById("campos-medico");
-        //Si se obtiene el acceso, entonces ocultalo mientras el select tenga el valor "Paciente"
-        if (camposMedico) {
-            camposMedico.classList.toggle("oculto", selectRol.value !== "MEDICO");
-        }
+            const camposMedico = document.getElementById("campos-medico");
+            if (camposMedico) {
+                camposMedico.classList.toggle("oculto", selectRol.value !== "MEDICO");
+            }
         });
     }
 
-    // Asignacion del listener al boton "registrarme" del formulario
+    // Intercepta el submit del formulario y dirige al flujo de médico o de paciente/usuario
     if (formRegistro) {
         formRegistro.addEventListener("submit", function (e) {
             e.preventDefault();
-            //Si el rol seleccionado es Medico entonces el listener asignado es medico, en caso contrario es usuario
             if (selectRol && selectRol.value === "MEDICO") {
                 registrarMedico();
             } else {
@@ -44,9 +42,9 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 /**
- * Valida los campos de usuario (nombre, correo, contraseña y teléfono) recorriendo un arreglo de inputs.
- * Evalúa primero los casos negativos (vacío o formato inválido) y luego los positivos.
- * @returns {boolean} True si todos los campos cumplen las validaciones, false en caso contrario.
+ * Valida los campos básicos de usuario (nombre, correo, contraseña y teléfono),
+ * marcando bordes en rojo o azul y actualizando placeholders si hay error.
+ * @returns {boolean} True si todos los campos pasan la validación, false en caso contrario.
  */
 function validarDatosUsuario() {
     let datosValidos = true;
@@ -57,6 +55,7 @@ function validarDatosUsuario() {
         if (!inp) continue;
         const valor = inp.value;
 
+        // Primero revisa si el campo está vacío o solo tiene espacios
         if (valor == null || valor.trim().length <= 0) {
             inp.style.border = "2px solid red";
 
@@ -76,6 +75,7 @@ function validarDatosUsuario() {
 
             datosValidos = false;
         } else {
+            // Si no está vacío, valida el formato contra su expresión regular correspondiente
             if (inp === inpNombre) {
                 if (!patronNombre.test(valor.trim())) {
                     inp.style.border = "2px solid red";
@@ -120,8 +120,9 @@ function validarDatosUsuario() {
 }
 
 /**
- * Valida los campos de usuario y además los campos propios de médico (cédula, especialidad y dirección).
- * @returns {boolean} True si todos los campos cumplen las validaciones, false en caso contrario.
+ * Valida primero los datos generales de usuario y luego los campos específicos de médico
+ * (cédula profesional, especialidad y dirección).
+ * @returns {boolean} True si todo es válido, false si falla algún campo.
  */
 function validarDatosMedico() {
     let datosValidos = validarDatosUsuario();
@@ -132,6 +133,7 @@ function validarDatosMedico() {
         if (!inp) continue;
         const valor = inp.value;
 
+        // Revisa campos obligatorios de médico vacíos
         if (valor == null || valor.trim().length <= 0) {
             inp.style.border = "2px solid red";
 
@@ -149,6 +151,7 @@ function validarDatosMedico() {
 
             datosValidos = false;
         } else {
+            // Valida formato de cédula, especialidad y longitud mínima de dirección
             if (inp === inpCedula) {
                 if (!/^[0-9]{4,15}$/.test(valor.trim())) {
                     inp.style.border = "2px solid red";
@@ -179,7 +182,7 @@ function validarDatosMedico() {
 // ==================== METODOS DE SOLICITUD ====================
 
 /**
- * Envía los datos de usuario en formato JSON mediante fetch al controlador de usuarios.
+ * Envía el payload de registro de paciente/usuario al endpoint de usuarios y redirige al login si tiene éxito.
  */
 async function solicitudRegistroUsuario() {
     const payload = {
@@ -191,7 +194,7 @@ async function solicitudRegistroUsuario() {
     };
 
     try {
-        const response = await fetch("/api/usuarios/registro", {
+        const response = await fetch("http://localhost:8081/api/usuarios/registro", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -214,7 +217,7 @@ async function solicitudRegistroUsuario() {
 }
 
 /**
- * Envía los datos de médico en formato JSON mediante fetch al controlador de médicos.
+ * Envía el payload de registro de médico (incluyendo cédula, especialidad y dirección) al backend.
  */
 async function solicitudRegistroMedico() {
     const payload = {
@@ -229,7 +232,7 @@ async function solicitudRegistroMedico() {
     };
 
     try {
-        const response = await fetch("/api/medicos/registro", {
+        const response = await fetch("http://localhost:8081/api/medicos/registro", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -251,9 +254,8 @@ async function solicitudRegistroMedico() {
     }
 }
 
-
 /**
- * Método intermediario para validar y ejecutar el registro de usuario.
+ * Valida los datos de usuario y, si son correctos, dispara la petición de registro.
  */
 function registrarUsuario() {
     const esValido = validarDatosUsuario();
@@ -263,7 +265,7 @@ function registrarUsuario() {
 }
 
 /**
- * Método intermediario para validar y ejecutar el registro de médico.
+ * Valida los datos de médico y, si son correctos, dispara la petición de registro.
  */
 function registrarMedico() {
     const esValido = validarDatosMedico();

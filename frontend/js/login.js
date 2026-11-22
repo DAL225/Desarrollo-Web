@@ -1,28 +1,24 @@
-// CLASE LOGIN 
-
-//Listener DOMContentLoaded
+// Espera a que cargue el DOM para interceptar el envío del formulario de login
 document.addEventListener("DOMContentLoaded", function () {
-  //obtiene acceso al panel del login
   const formLogin = document.getElementById("form-login");
-  //Si se obtuvo el elemento entonces se le añade el listener al boton de inicio de sesion
   if (formLogin) {
     formLogin.addEventListener("submit", function (e) {
-      e.preventDefault();
+      e.preventDefault(); // Evita que el formulario recargue la página
       iniciarSesion();
     });
   }
 });
 
-// Patrones para validacion
-const patronNombre = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+// Expresiones regulares: correo @gmail.com (parte local de 1 a 20 caracteres) y contraseña sin espacios (1 a 20)
 const patronCorreo = /^[A-Za-z0-9._%+-]{1,20}@gmail\.com$/i;
 const patronContrasena = /^\S{1,20}$/;
 
-// Elementos DOM
+// Referencias a los inputs de correo, contraseña y botón de login
 const inpCorreo = document.getElementById("inpCorreo");
 const inpPassword = document.getElementById("inpPassword");
 const btnIniciarSesion = document.getElementById("btnIniciarSesion");
-//Asignacion del listener en el boton de inicio de sesion
+
+// También permite disparar iniciarSesion() al hacer clic directo en el botón
 if (btnIniciarSesion) {
   btnIniciarSesion.addEventListener("click", function (e) {
     if (e && typeof e.preventDefault === "function") {
@@ -32,109 +28,104 @@ if (btnIniciarSesion) {
   });
 }
 
-/**
- * Funcion que valida los datos de inicio de sesion y realiza la solicitud al servidor
- */
+// Muestra un mensaje de error en #error-login (o con alert si no existe ese elemento)
+function mostrarFeedbackLogin(mensaje) {
+  const errorEl = document.getElementById("error-login");
+  if (errorEl) {
+    errorEl.textContent = mensaje;
+    errorEl.classList.remove("oculto");
+  } else {
+    alert(mensaje);
+  }
+}
+
+// Coordina el flujo de inicio de sesión: primero valida y luego envía al backend
 function iniciarSesion() {
-  const validacionExitosa = validarCredenciales();
-  if (validacionExitosa) {
+  if (validarCredenciales()) {
     login();
   }
 }
 
-/**
- * Funcion que valida las credenciales ingresadas
- * @returns Boolean True / False dependiendo si los datos son correctos o no correspondientemente
- */
+// Valida formato y longitud de correo y contraseña, marcando bordes y placeholders en rojo o azul
 function validarCredenciales() {
-  //Se declara una bandera con el valor true, esta debe llegar al final del metodo sin sufrir modificaciones entonces los datos seran validos
   let exito = true;
-  //Se obtienen los valores de los inputs, se guarda el contenido en texto o null si no se encuentra
-  const correo = inpCorreo ? inpCorreo.value.trim() : null;
-  const psw = inpPassword ? inpPassword.value : null;
-  //Si se pudo recuperar el contenido entonces dejamos los inputs con sus estilos normales
-  if (correo !== null && correo.length > 0) {
-    inpCorreo.style.borderColor = "";
-    //Si no se recupero un valor entonces se avisa el error en el input
+  const correo = inpCorreo ? inpCorreo.value.trim() : "";
+  const psw = inpPassword ? inpPassword.value : "";
+
+  // Valida correo
+  if (correo.length > 0 && patronCorreo.test(correo)) {
+    if (inpCorreo) {
+      inpCorreo.style.borderWidth = "2px";
+      inpCorreo.style.borderColor = "blue";
+    }
   } else {
-    inpCorreo.style.borderColor = "2px solid red";
-    inpCorreo.value = "";
-    inpCorreo.placeholder = "Error ingresa un correo";
+    if (inpCorreo) {
+      inpCorreo.style.borderWidth = "2px";
+      inpCorreo.style.borderColor = "red";
+      inpCorreo.value = "";
+      inpCorreo.placeholder = correo.length === 0
+        ? "Error ingresa un correo"
+        : "Máx. 20 caracteres y dominio @gmail.com";
+    }
     exito = false;
   }
-  if (psw !== null && psw.length > 0) {
-    inpPassword.style.borderColor = "";
-    //Si no se recupero un valor entonces se avisa el error en el input
+
+  // Valida contraseña
+  if (psw.length > 0 && patronContrasena.test(psw)) {
+    if (inpPassword) {
+      inpPassword.style.borderWidth = "2px";
+      inpPassword.style.borderColor = "blue";
+    }
   } else {
-    inpPassword.style.borderColor = "2px solid red";
-    inpPassword.value = "";
-    inpPassword.placeholder = "Error ingresa una contraseña";
+    if (inpPassword) {
+      inpPassword.style.borderWidth = "2px";
+      inpPassword.style.borderColor = "red";
+      inpPassword.value = "";
+      inpPassword.placeholder = psw.length === 0
+        ? "Error ingresa una contraseña"
+        : "Usa mayúsculas, minúsculas y símbolos";
+    }
     exito = false;
   }
-  //Ahora validamos que correspondan con el formato esperado
-  if (patronCorreo.test(correo)) {
-    inpCorreo.style.borderColor = "2px solid blue";
-  } else {
-    inpCorreo.style.borderColor = "2px solid red";
-    inpCorreo.value = "";
-    inpCorreo.placeholder = "Máx. 20 caracteres y dominio @gmail.com";
-    exito = false;
-  }
-  if (patronContrasena.test(psw)) {
-    inpPassword.style.borderColor = "2px solid blue";
-  } else {
-    inpPassword.style.borderColor = "2px solid red";
-    inpPassword.value = "";
-    inpPassword.placeholder = "Usa mayúsculas, minúsculas y símbolos";
-    exito = false;
-  }
+
   return exito;
 }
 
-/**
- * 
- */
+// Envía correo y contraseña al backend, guarda la sesión en sessionStorage y redirige según el rol
 async function login() {
   try {
     const correo = inpCorreo ? inpCorreo.value.trim() : "";
     const psw = inpPassword ? inpPassword.value : "";
+
     const response = await fetch("http://localhost:8081/api/usuarios/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        correo: correo,
-        psw: psw
-      })
+      body: JSON.stringify({ correo, psw })
     });
 
-
-    //Carga el contenido del template del backend
-    document.getElementById("btn-contacto").addEventListener("click", async () => {
-      const contenedor = document.getElementById("seccion-contacto");
-
-      if (!contenedor.dataset.cargado) {
-        const respuesta = await fetch("http://localhost:8081/api/contacto");
-
-        const html = await respuesta.text();
-        console.log(html);
-        contenedor.innerHTML = html;
-        contenedor.dataset.cargado = "true";
-      }
-
-      mostrarSeccion("seccion-contacto");
-
-    });
     const respuesta = await response.json();
-    if (respuesta.ok) {
-      // Se almacenan id, nombre, correo, telefono y rol en localStorage
-      guardarSesion(respuesta.usuario);
-      alert(respuesta.mensaje)
-      // Redirección al panel según el rol (paciente.html o medico.html)
-      irAPanel(respuesta.usuario);
+
+    if (respuesta.ok && respuesta.usuario) {
+      const u = respuesta.usuario;
+      // Normaliza los campos del usuario para tenerlos consistentes en sesión
+      const datosSesion = {
+        id: u.idUsuario || u.id || null,
+        idUsuario: u.idUsuario || u.id || null,
+        nombre: u.nombre || "",
+        correo: u.correo || "",
+        telefono: u.telefono || "",
+        rol: u.rol ? u.rol.toUpperCase() : ""
+      };
+
+      sessionStorage.setItem("usuario", JSON.stringify(datosSesion));
+      alert(respuesta.mensaje || "Sesión iniciada");
+
+      // Redirige al panel correspondiente según el rol
+      location.href = datosSesion.rol === "MEDICO" ? "medico.html" : "paciente.html";
     } else {
-      alert("No se ha encontrado al usuario");
+      mostrarFeedbackLogin(respuesta.mensaje || "No se ha encontrado al usuario");
     }
   } catch (error) {
     console.error("Error en login:", error);
