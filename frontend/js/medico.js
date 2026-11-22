@@ -1,15 +1,14 @@
-const usuario = protegerPagina('MEDICO');
+const usuarioM = protegerPagina('MEDICO');
 
-document.getElementById('nombre-usuario').textContent = usuario.nombre;
+document.getElementById('nombre-usuario').textContent = usuarioM.nombre;
 document.getElementById('btn-salir').onclick = cerrarSesion;
 document.getElementById('fecha').min = hoy();
 
 // ---------- Agenda del Médico ----------
-function cargarAgenda() {
+async function cargarAgenda() {
   const cont = document.getElementById('lista-agenda');
   const recetas = obtenerRecetas();
-  const mias = obtenerCitas().filter(c => c.idMedico === usuario.correo)
-    .sort((a, b) => (b.fecha + b.inicio).localeCompare(a.fecha + a.inicio));
+  const mias = await obtenerCitasMedico(usuarioM.id);
   
   cont.innerHTML = '';
   if (!mias.length) {
@@ -54,7 +53,7 @@ function cargarContadores(mias) {
   document.getElementById('cont-reservadas').textContent = cuenta('RESERVADA');
   document.getElementById('cont-atendidas').textContent = cuenta('ATENDIDA');
   
-  const r = obtenerResenas().filter(x => x.idMedico === usuario.correo);
+  const r = obtenerResenas().filter(x => x.idMedico === usuarioM.correo);
   document.getElementById('cont-promedio').textContent = r.length ? (r.reduce((s, x) => s + x.calificacion, 0) / r.length).toFixed(1) : '-';
 }
 

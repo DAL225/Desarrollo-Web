@@ -139,21 +139,52 @@ document.addEventListener('click', e => {
 });
 
 // Datos iniciales de usuarios demo (Se pasará a la API más adelante)
-function obtenerUsuarios() {
-  const USUARIOS_DEMO = [
-    { correo: 'paciente@correo.com', clave: '1234', nombre: 'Ana Torres', rol: 'PACIENTE' },
-    { correo: 'paciente2@correo.com', clave: '1234', nombre: 'Luis Pérez', rol: 'PACIENTE' },
-    { correo: 'medico@correo.com', clave: '1234', nombre: 'Dra. Elena Vargas', rol: 'MEDICO', cedula: '8451203', especialidad: 'Cardiología', direccion: 'Av. Reforma 120, Consultorio 4' },
-    { correo: 'medico2@correo.com', clave: '1234', nombre: 'Dr. Marcos Rivera', rol: 'MEDICO', cedula: '7392045', especialidad: 'Pediatría', direccion: 'Calle Hidalgo 58, Centro' }
-  ];
-  return USUARIOS_DEMO;
+async function obtenerUsuarios() {
+  try {
+    const respuesta = await fetch("http://localhost:8081/api/usuarios");
+    if (!respuesta.ok){
+      throw new Error('Error HTTP: ${respuesta.status}');
+    }
+    const datos = await respuesta.json();
+    console.log(datos);
+    return datos;
+  } catch (error){
+    console.error('Hubo un problema con el metodo fetch:', error);
+  }
 }
 
-function nombreUsuario(correo) {
-  const u = obtenerUsuarios().find(x => x.correo === correo);
-  return u ? u.nombre : correo;
+async function nombreUsuario(correo) {
+  var listaUsuario = [];
+  listaUsuario = await obtenerUsuarios();
+  listaUsuario.forEach(element => {
+    if (element.correo === correo){
+      console.log(element ? element.nombre : corre);
+      return element ? element.nombre : correo;
+    }
+  });
 }
 
-function buscarUsuario(correo) {
-  return obtenerUsuarios().find(x => x.correo === correo);
+async function buscarUsuario(correo) {
+  let listaUsuario = [];
+  listaUsuario = await obtenerUsuarios();
+  listaUsuario.forEach(element => {
+    if (element.correo == correo){
+      console.log(element);
+      return element;
+    }
+  });
+}
+
+async function obtenerMedicos() {
+  try {
+    const respuesta = await fetch("http://localhost:8081/api/medicos");
+    if (!respuesta.ok){
+      throw new Error('Error HTTP: ${respuesta.status}');
+    }
+    const datos = await respuesta.json();
+    console.log(datos);
+    return datos;
+  } catch (error){
+    console.error('Hubo un problema con el metodo fetch:', error);
+  }
 }

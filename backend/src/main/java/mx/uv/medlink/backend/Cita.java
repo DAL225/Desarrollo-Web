@@ -48,7 +48,7 @@ public class Cita {
     }
 
     public Cita(LocalDate fecha, LocalTime hora_inicio, LocalTime hora_fin, Medico medico, Usuario usuario, estado estado){
-        if (fecha == null || fecha.isBefore(LocalDate.now())){
+        if (fecha == null ){
             throw new IllegalArgumentException("La fecha debe de ser una fecha valida.");
         }
         if (hora_inicio == null){
@@ -77,7 +77,6 @@ public class Cita {
     public void setIdCita(int idCita) {
         this.idCita = idCita;
     }
-
 
     public LocalDate getFecha() {
         return fecha;

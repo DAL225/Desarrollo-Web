@@ -13,8 +13,9 @@ let listaMedicos = [];
  * Obtiene la lista de médicos disponibles desde la fuente de datos (usuarios con rol MEDICO).
  * @returns {Array<Object>} Arreglo de objetos médico.
  */
-function obtenerListaMedicos() {
-  return obtenerUsuarios().filter(u => u.rol === 'MEDICO');
+async function obtenerListaMedicos() {
+  const medicos = await obtenerMedicos();
+  return medicos;
 }
 
 // Listener DOMContentLoaded que ejecuta la carga inicial y renderizado del directorio
@@ -51,17 +52,16 @@ function cargarEspecialidades() {
 /**
  * Renderiza las tarjetas de los médicos en divListaMedicos aplicando los filtros activos.
  */
-function renderizarDirectorio() {
+async function renderizarDirectorio() {
   if (!divListaMedicos) return;
 
   const texto = inpBarraBusqueda ? inpBarraBusqueda.value.toLowerCase() : '';
   const esp = selectEspecialidad ? selectEspecialidad.value : '';
 
   // Se actualiza la variable global listaMedicos
-  listaMedicos = obtenerListaMedicos().filter(m =>
-    (!esp || m.especialidad === esp) &&
-    (m.nombre + ' ' + m.especialidad).toLowerCase().includes(texto)
-  );
+  listaMedicos = await obtenerListaMedicos();
+  console.log(listaMedicos);
+  console.log(listaMedicos[1].usuario.correo);
 
   // Se limpia la sección de divListaMedicos
   divListaMedicos.innerHTML = '';
@@ -74,22 +74,22 @@ function renderizarDirectorio() {
   // Se itera sobre cada objeto doctor recuperado para construir su tarjeta/botón
   listaMedicos.forEach(doctor => {
     const promedio = typeof calcularPromedioMedico === 'function'
-      ? calcularPromedioMedico(doctor.correo)
+      ? calcularPromedioMedico(doctor.usuario.correo)
       : '★ N/A';
 
     divListaMedicos.innerHTML += `
       <article class="tarjeta">
         <div class="divPanelContenido">
           <div class="datos">
-            <h3>${doctor.nombre}</h3>
-            <p class="texto-suave">${doctor.especialidad} · Céd. ${doctor.cedula}</p>
+            <h3>${doctor.usuario.nombre}</h3>
+            <p class="texto-suave">${doctor.especialidad} · Céd. ${doctor.cedulaProfesional}</p>
           </div>
           <div class="direccion">
             <p class="texto-suave">📍 ${doctor.direccion}</p>
           </div>
           <div class="detalles fila-pie">
             <span class="nota">${promedio}</span>
-            <button type="button" class="boton chico btn-ver" onclick="abrirMedico('${doctor.correo}')">
+            <button type="button" class="boton chico btn-ver" onclick="abrirMedico('${doctor.usuario.correo}')">
               Ver horarios
             </button>
           </div>
@@ -104,28 +104,31 @@ inpBarraBusqueda?.addEventListener('input', renderizarDirectorio);
 selectEspecialidad?.addEventListener('change', renderizarDirectorio);
 
 // ---------- Modal Médico: Horarios y Reseñas ----------
-function abrirMedico(correo) {
-  const m = buscarUsuario(correo);
+async function abrirMedico(correo) {
+  let m;
+  listaMedicos.forEach(element => {
+    if (element.usuario.correo == correo){
+      m = element;
+    }
+  });
   if (!m) return;
   medicoActual = correo;
-  document.getElementById('medico-nombre').textContent = m.nombre;
-  document.getElementById('medico-datos').textContent = m.especialidad + ' · Céd. ' + m.cedula;
+  document.getElementById('medico-nombre').textContent = m.usuario.nombre;
+  document.getElementById('medico-datos').textContent = m.especialidad + ' · Céd. ' + m.cedulaProfesional;
   document.getElementById('medico-direccion').textContent = '📍 ' + m.direccion;
-  cargarHorarios();
+  await cargarHorarios(m.idMedico);
   if (typeof cargarResenasModal === 'function') {
     cargarResenasModal();
   }
   abrirModal('modal-medico');
 }
 
-function cargarHorarios() {
+async function cargarHorarios(id) {
   const cont = document.getElementById('lista-horarios');
   if (!cont) return;
   cont.innerHTML = '';
-  const libres = obtenerCitas()
-    .filter(c => c.idMedico === medicoActual && c.estado === 'DISPONIBLE' && !c.idPaciente && c.fecha >= hoy())
-    .sort((a, b) => (a.fecha + a.inicio).localeCompare(b.fecha + b.inicio));
-
+  libres = [];
+  libres = await obtenerCitasMedico(id);
   if (!libres.length) {
     cont.innerHTML = '<p class="texto-suave">Sin horarios disponibles.</p>';
     return;
@@ -134,21 +137,22 @@ function cargarHorarios() {
   libres.forEach(c => {
     const t = clonar('plantilla-horario');
     poner(t, '.hor-fecha', c.fecha);
-    poner(t, '.hor-hora', c.inicio + ' – ' + c.fin);
-    t.querySelector('.btn-reservar').onclick = () => reservarCita(c.id);
+    poner(t, '.hor-hora', c.hora_inicio + ' – ' + c.hora_fin);
+    t.querySelector('.btn-reservar').onclick = () => reservarCita(c.idCita);
     cont.appendChild(t);
   });
 }
 
 // ---------- Mis Citas ----------
-function cargarCitas() {
+async function cargarCitas() {
   const cont = document.getElementById('lista-citas');
   if (!cont || !usuario) return;
-  const todas = obtenerCitas();
-  const mias = todas.filter(c => c.idPaciente === usuario.correo).sort((a, b) => b.fecha.localeCompare(a.fecha));
+  mias = [];
+  mias = await obtenerCitasUsuario(usuario.id);
   const activas = mias.filter(c => c.estado === 'RESERVADA').length;
+  console.log(mias);
 
-  document.getElementById('info-limite').textContent = `Tienes ${activas} de 3 citas activas permitidas.`;
+  document.getElementById('info-limite').textContent = `Tienes ${activas} citas activas de 3 permitidas.`;
   cont.innerHTML = '';
 
   if (!mias.length) {
@@ -158,9 +162,13 @@ function cargarCitas() {
 
   mias.forEach(c => {
     const t = clonar('plantilla-cita');
-    const med = buscarUsuario(c.idMedico);
+    listaMedicos.forEach(m => {
+      if(m.idMedico === c.idMedico){
+        const med = m;
+      }
+    })
     poner(t, '.cita-medico', med ? med.nombre : c.idMedico);
-    poner(t, '.cita-fecha', c.fecha + ' (' + c.inicio + ' – ' + c.fin + ')');
+    poner(t, '.cita-fecha', c.fecha + ' (' + c.hora_inicio + ' – ' + c.hora_fin + ')');
 
     const est = t.querySelector('.cita-estado');
     est.textContent = c.estado;

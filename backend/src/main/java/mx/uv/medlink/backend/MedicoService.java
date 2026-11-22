@@ -1,4 +1,8 @@
 package mx.uv.medlink.backend;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +18,9 @@ public class MedicoService {
      * Metodo que devuelve una lista con todos los medicos en la BD.
      * @return List de medicos.
      */
-    public Iterable<Medico> obtenerMedicos() {
-        return imedico.findAll();
+    public List<Medico> obtenerMedicos() {
+        Iterable<Medico> iterable = imedico.findAll();
+        return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
     }
 
     /**
