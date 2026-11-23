@@ -128,7 +128,9 @@ http://127.0.0.1:3000/frontend/index.html
 
 Si se presentan problemas al utilizar Live Preview, puedes acceder directamente a la siguiente dirección:
 
-[http://localhost:8081/](http://localhost:8081/)
+```text
+http://localhost:8081/
+```
 
 Esta alternativa permite visualizar el frontend desde el mismo servidor de Spring Boot, sin necesidad de utilizar Live Preview.
 
