@@ -8,11 +8,11 @@ Proyecto web que utiliza **Spring Boot** para el backend y una interfaz web para
 
 Antes de ejecutar el proyecto, asegúrate de contar con las siguientes herramientas:
 
-- [Git](https://git-scm.com/) para clonar el repositorio.
-- [Visual Studio Code](https://code.visualstudio.com/) como entorno de desarrollo.
-- [WSL](https://learn.microsoft.com/es-es/windows/wsl/install) para trabajar desde Linux en Windows.
+- Git para clonar el repositorio.
+- Visual Studio Code como entorno de desarrollo.
+- WSL para trabajar desde Linux en Windows.
 - Java JDK, compatible con la versión configurada en el proyecto.
-- [Apache Maven](https://maven.apache.org/) para compilar y ejecutar el backend.
+- Apache Maven para compilar y ejecutar el backend.
 - Extensión **Live Preview** de Visual Studio Code para visualizar el frontend.
 
 ## 1. Clonar el repositorio
