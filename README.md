@@ -142,11 +142,11 @@ Además, la base de datos contiene los siguientes usuarios con información prev
 
 | Correo electrónico | Contraseña | Rol |
 |---|---|---|
-| rmora@gmail.com | 1234 | Médico |
-| pmontez@gmail.com | 1234 | Médico |
-| gcruz@gmail.com | 1234 | Médico |
-| pramirez@gmail.com | 1234 | Usuario/Paciente |
-| fhernandez@gmail.com | 1234 | Usuario/Paciente |
+| `rmora@gmail.com` | 1234 | Médico |
+| `pmontez@gmail.com` | 1234 | Médico |
+| `gcruz@gmail.com` | 1234 | Médico |
+| `pramirez@gmail.com` | 1234 | Usuario/Paciente |
+| `fhernandez@gmail.com` | 1234 | Usuario/Paciente |
 
 ## 8. Resumen de direcciones y puertos
 
