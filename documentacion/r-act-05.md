@@ -23,7 +23,7 @@ Integracion colaborativa y manejo de errores
 |------------|------------------------|-----------------|
 |Reestructuracion de frontend, validaciones de pruebas y correcciones | Misael | https://github.com/DAL225/Desarrollo-Web/commit/d65e4b839e4fd95a249e6cbe1c8af6bb560cf69f |
 |Retrospectiva del desarrollo | Cesar | https://github.com/DAL225/Desarrollo-Web/commit/81c6d7b1f57404579eaad42a478c39794a52cdf9 |
-| |  |  |
+|Implementación de conectividad correcta con la base de datos| Diego | https://github.com/DAL225/Desarrollo-Web/commit/48848451b8c652157969ddf411b59769829584e8 |
 
 ---
 
@@ -59,7 +59,7 @@ Documentar el uso de herramientas de inteligencia artificial durante el desarrol
 
 Describir brevemente la contribución de cada integrante.
 
-- **Diego:** 
+- **Diego:** Arreglo de problemas con la conexión a base de datos
 - **Misael:** Reestructuracion de frontend y correcciones a backend.
 - **Cesar:** Pruebas de funcionamiento 
 
