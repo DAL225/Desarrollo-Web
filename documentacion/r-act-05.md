@@ -22,7 +22,7 @@ Integracion colaborativa y manejo de errores
 | Actividad | Integrante responsable | Enlace a commit |
 |------------|------------------------|-----------------|
 |Reestructuracion de frontend, validaciones de pruebas y correcciones | Misael | https://github.com/DAL225/Desarrollo-Web/commit/d65e4b839e4fd95a249e6cbe1c8af6bb560cf69f |
-| |  |  |
+|Retrospectiva del desarrollo | Cesar | https://github.com/DAL225/Desarrollo-Web/commit/81c6d7b1f57404579eaad42a478c39794a52cdf9 |
 | |  |  |
 
 ---
@@ -61,7 +61,7 @@ Describir brevemente la contribución de cada integrante.
 
 - **Diego:** 
 - **Misael:** Reestructuracion de frontend y correcciones a backend.
-- **Cesar:** 
+- **Cesar:** Pruebas de funcionamiento 
 
 ---
 
